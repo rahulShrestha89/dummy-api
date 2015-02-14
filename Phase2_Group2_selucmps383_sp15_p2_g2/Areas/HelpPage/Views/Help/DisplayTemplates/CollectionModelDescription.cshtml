@@ -1,0 +1,6 @@
+@using Phase2_Group2_selucmps383_sp15_p2_g2.Areas.HelpPage.ModelDescriptions
+@model CollectionModelDescription
+@if (Model.ElementDescription is ComplexTypeModelDescription)
+{
+    @Html.DisplayFor(m => m.ElementDescription)
+}
