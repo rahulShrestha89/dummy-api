@@ -9,13 +9,13 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
     public class GameStoreRepository : IGameStoreRepository
     {
         private List<Game> _db = new List<Game>(); //Named the List _db so the transfer will go smoothly when database is up.
-        private int _nextId = 1;
+        private int _nextId = 4;
 
         public GameStoreRepository()
         {
-           _db.Add(new Game { Name = "Mario"});
-           _db.Add(new Game { Name = "Luigi"});
-           _db.Add(new Game { Name = "FunGame"});
+           _db.Add(new Game {Id=1, Name = "Mario"});
+           _db.Add(new Game {Id=2, Name = "Luigi"});
+           _db.Add(new Game {Id=3, Name = "FunGame"});
         }
 
         /// <summary>

@@ -17,9 +17,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
             return _repo.GetAll();
         }
 
-        public Game GetGame(int gameId)
+        public Game GetGame(int id)
         {
-            Game game = _repo.Get(gameId);
+            Game game = _repo.Get(id);
             if(game == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
