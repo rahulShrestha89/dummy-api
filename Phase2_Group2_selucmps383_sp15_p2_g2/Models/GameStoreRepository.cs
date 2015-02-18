@@ -13,9 +13,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 
         public GameStoreRepository()
         {
-           _db.Add(new Game {Id=1, Name = "Mario"});
-           _db.Add(new Game {Id=2, Name = "Luigi"});
-           _db.Add(new Game {Id=3, Name = "FunGame"});
+           _db.Add(new Game {GameId=1, GameName = "Mario"});
+           _db.Add(new Game {GameId=2, GameName = "Luigi"});
+           _db.Add(new Game {GameId=3, GameName = "FunGame"});
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         /// <returns>Returns the user with the specified Id.</returns>
         public Game Get(int gameId)
         {
-            return _db.Find(r => r.Id == gameId);
+            return _db.Find(r => r.GameId == gameId);
         }
 
         public Game Add(Game addedGame)
@@ -43,14 +43,14 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
             {
                 throw new ArgumentNullException("Game");
             }
-            addedGame.Id = _nextId++;
+            addedGame.GameId = _nextId++;
             _db.Add(addedGame);
             return addedGame;
         }
 
         public void Remove(int gameId)
         {
-            _db.RemoveAll(r => r.Id == gameId);
+            _db.RemoveAll(r => r.GameId == gameId);
         }
 
         public bool Update(Game updatedGame)
@@ -59,7 +59,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
             {
                 throw new ArgumentNullException("Game");
             }
-            int index = _db.FindIndex(r => r.Id == updatedGame.Id);
+            int index = _db.FindIndex(r => r.GameId == updatedGame.GameId);
             if(index == -1)
             {
                 return false;
