@@ -11,7 +11,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
     {
         public int GameId { get; set; }
 
-        [Index(IsUnique = true)]
         [Display(Name = "Game Name")]
         public string GameName { get; set; }
 
