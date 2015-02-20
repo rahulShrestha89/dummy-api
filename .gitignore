@@ -24,6 +24,7 @@ Thumbs.db
 *.lib
 *.sbr
 packages/
+Migrations/
 obj/
 [Rr]elease*/
 _ReSharper*/
