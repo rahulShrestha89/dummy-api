@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -10,6 +11,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
     {
         public int GameId { get; set; }
 
+        [Index(IsUnique = true)]
         [Display(Name = "Game Name")]
         public string GameName { get; set; }
 
