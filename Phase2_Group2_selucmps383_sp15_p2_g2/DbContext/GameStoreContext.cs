@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Security.Policy;
 using System.Web;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.DbContext
@@ -22,19 +21,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.DbContext
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Cart> Carts { get; set; }
-        public DbSet<Sale> Sales { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelbuilder) 
-        {
-            modelbuilder.Conventions.Remove<PluralizingTableNameConvention>();
-        }
-
-
-
-
+        public DbSet<Sale> Sales { get; set; } 
     }
-
-
-
-
 }
