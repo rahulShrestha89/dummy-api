@@ -28,6 +28,21 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Migrations
 
                 }
             };
+
+
+            var genres = new List<Genre>()
+            {
+                new Genre
+                {
+                    GenreId= 0,
+                    Name ="Fantasy",
+                    Games = new List<Game>{}
+
+                }
+
+            
+            };
+
             
         }
     }

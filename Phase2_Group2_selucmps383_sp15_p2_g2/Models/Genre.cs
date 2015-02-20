@@ -8,6 +8,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
     public class Genre
     {
         public int GenreId { get; set; }
+        public string Name { get; set; }
         public List<Game> Games { get; set; }
     }
 }
