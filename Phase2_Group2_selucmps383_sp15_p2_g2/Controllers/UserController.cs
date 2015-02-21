@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
+using System.Security.Cryptography;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
 {
@@ -53,6 +54,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.ApiKey = GetApiKey();
                 db.Users.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -128,6 +130,16 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public string GetApiKey()
+        {
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                var bytes = new byte[16];
+                rng.GetBytes(bytes);
+                return Convert.ToBase64String(bytes);
+            }
         }
     }
 }

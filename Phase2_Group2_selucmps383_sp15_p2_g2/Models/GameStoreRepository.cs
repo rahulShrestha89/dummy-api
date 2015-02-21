@@ -3,28 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
+using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 {
     public class GameStoreRepository : IGameStoreRepository
     {
-        private List<Game> _db = new List<Game>(); //Named the List _db so the transfer will go smoothly when database is up.
-        private int _nextId = 4;
+        private GameStoreContext _db = new GameStoreContext(); //Named the List _db so the transfer will go smoothly when database is up.
 
-        public GameStoreRepository()
-        {
-           _db.Add(new Game {GameId=1, GameName = "Mario"});
-           _db.Add(new Game {GameId=2, GameName = "Luigi"});
-           _db.Add(new Game {GameId=3, GameName = "FunGame"});
-        }
 
         /// <summary>
         /// Lists all games.
         /// </summary>
         /// <returns>Returns all games found.</returns>
-        public IEnumerable<Game> GetAll()
+        public IQueryable<Game> GetAll()
         {
-            return _db;
+            return _db.Games;
         }
 
         /// <summary>
@@ -34,50 +30,83 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         /// <returns>Returns the user with the specified Id.</returns>
         public Game Get(int gameId)
         {
-            return _db.Find(r => r.GameId == gameId);
+            return _db.Games.FirstOrDefault(g => g.GameId == gameId);
         }
 
-        public Game Add(Game addedGame)
+        public Game Add(Game game)
         {
-            if(addedGame == null)
+            if(game == null)
             {
                 throw new ArgumentNullException("Game");
             }
-            addedGame.GameId = _nextId++;
-            _db.Add(addedGame);
-            return addedGame;
+            _db.Games.Add(game);
+            _db.SaveChanges();
+            return game;
         }
 
-        public void Remove(int gameId)
+        public void Remove(int id)
         {
-            _db.RemoveAll(r => r.GameId == gameId);
+            Game removeMe = _db.Games.Find(id);
+            _db.Games.Remove(removeMe);
+            _db.SaveChanges();
         }
 
-        public bool Update(Game updatedGame)
+        public bool Update(Game game, int id)
         {
-            if(updatedGame == null)
+            if(game==null)
             {
                 throw new ArgumentNullException("Game");
             }
-            int index = _db.FindIndex(r => r.GameId == updatedGame.GameId);
-            if(index == -1)
+            if(game.GameId != id)
             {
                 return false;
             }
-            _db.RemoveAt(index);
-            _db.Add(updatedGame);
+            _db.Entry(game).State = EntityState.Modified;
+
+            try
+            {
+                _db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GameExists(id))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+  
             return true;
         }
 
-        public string GetApiKey()
+        public bool GameExists(int id)
         {
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                var bytes = new byte[16];
-                rng.GetBytes(bytes);
-                return Convert.ToBase64String(bytes);
-            }
+            return _db.Games.Count(e => e.GameId == id) > 0;
         }
+
+        public void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if(_db != null)
+                {
+                    _db.Dispose();
+                    _db = null;
+                }
+            } 
+           
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        
 
     }
 }

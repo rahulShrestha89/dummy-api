@@ -8,11 +8,12 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 {
     interface IGameStoreRepository
     {
-        IEnumerable<Game> GetAll();
+        IQueryable<Game> GetAll();
         Game Get(int id);
         void Remove(int id);
-        bool Update(Game game);
+        bool Update(Game game, int id);
         Game Add(Game game);
-        string GetApiKey();
+        bool GameExists(int id);
+       
     }
 }
