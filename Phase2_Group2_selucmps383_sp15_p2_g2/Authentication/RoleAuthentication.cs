@@ -13,7 +13,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
     public class RoleAuthentication : AuthorizeAttribute
     {
         private List<string> authorizedRoles;
-        private BaseApiController baseController;
+        private BaseApiController Controller;
         private User user;
 
         public RoleAuthentication(string roles)
@@ -33,8 +33,8 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
 
         public override void OnAuthorization(HttpActionContext actionContext)
         {
-            baseController = (BaseApiController)actionContext.ControllerContext.Controller;
-            user = baseController.GameStoreUser;
+            Controller = (BaseApiController)actionContext.ControllerContext.Controller;
+            user = Controller.GameStoreUser;
 
             var userRoles = user.Roles.Select(r => r.RoleName);
 
