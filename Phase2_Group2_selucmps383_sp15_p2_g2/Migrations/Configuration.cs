@@ -35,7 +35,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Migrations
                 new Genre
                 {
                     GenreId= 0,
-                    GenreName ="Fantasy",
+                    Name ="Fantasy",
                     Games = new List<Game>{}
 
                 }

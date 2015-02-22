@@ -7,11 +7,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 {
     public class Sale
     {
-        public Sale()
-        {
-            CompanyUser = new User();
-        }
-
         public int SaleId { get; set; }
 
         public decimal? TotalAmount { get; set; }
@@ -19,6 +14,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         public DateTime? SaleDate { get; set; }
 
         public int UserId { get; set; }
-        public User CompanyUser { get; set; }
+        public User User { get; set; }
     }
 }

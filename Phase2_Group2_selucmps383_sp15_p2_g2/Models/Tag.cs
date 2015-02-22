@@ -8,15 +8,11 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 {
     public class Tag
     {
-        public Tag()
-        {
-            Games = new List<Game>();
-        }
         public int TagId { get; set; }
 
         [Display(Name = "Tag Name")]
         public string TagName { get; set; }
 
-        public ICollection<Game> Games { get; set; } 
+        public List<Game> Games { get; set; } 
     }
 }
