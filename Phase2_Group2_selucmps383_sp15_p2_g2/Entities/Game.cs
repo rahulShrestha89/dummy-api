@@ -9,6 +9,14 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 {
     public class Game
     {
+
+        public Game()
+        {
+            Users = new List<User>();
+            Genres = new List<Genre>();
+            Tags = new List<Tag>();
+        }
+
         public int GameId { get; set; }
 
         [Display(Name = "Game Name")]
@@ -23,9 +31,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         [Display(Name = "Quantity Left")]
         public int InventoryCount { get; set; }
 
-        public List<User> Users { get; set; } 
-        public List<Genre> Genres { get; set; }
-        public List<Tag> Tags { get; set; } 
+        public ICollection<User> Users { get; set; } 
+        public ICollection<Genre> Genres { get; set; }
+        public ICollection<Tag> Tags { get; set; } 
 
     }
 }

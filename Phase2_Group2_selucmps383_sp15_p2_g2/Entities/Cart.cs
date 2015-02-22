@@ -7,6 +7,11 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 {
     public class Cart
     {
+
+        public Cart()
+        {
+            Games = new List<Game>();
+        }
         public int CartId { get; set; }
 
         public string UserCartId { get; set; }  // store ID of the User associated with the cart as Session variable
@@ -15,7 +20,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 
         public System.DateTime CartDate { get; set; }
 
-        public List<Game> Games { get; set; } 
+        public ICollection<Game> Games { get; set; } 
 
     }
 }
