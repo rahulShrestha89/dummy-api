@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 {
-    interface IGameStoreRepository
+    public interface IGameStoreRepository
     {
         IQueryable<Game> GetAllGames();
         Game GetGame(int gameId);
