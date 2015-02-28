@@ -15,7 +15,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         public User()
         {
             CustomerCart = new Cart();
-            Games = new List<Game>();
             Sales = new List<Sale>();
         }
 
@@ -41,7 +40,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 
         public Cart CustomerCart { get; set; }
         public Enums.Role Role { get; set; }
-        public ICollection<Game> Games { get; set; }
         public ICollection<Sale> Sales { get; set; } 
 
     }

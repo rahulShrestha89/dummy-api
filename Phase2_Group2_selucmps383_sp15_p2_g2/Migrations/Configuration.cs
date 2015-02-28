@@ -4,46 +4,28 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
-    using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
-    using System.Collections.Generic;
-
-
 
     internal sealed class Configuration : DbMigrationsConfiguration<Phase2_Group2_selucmps383_sp15_p2_g2.DbContext.GameStoreContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(Phase2_Group2_selucmps383_sp15_p2_g2.DbContext.GameStoreContext context)
         {
-            var tags = new List<Tag>()
-            {
-                new Tag
-                {
-                     Games = new List<Game>{},
-                     TagId = 0,
-                     TagName = "shsdfgfrhh"
+            //  This method will be called after migrating to the latest version.
 
-                }
-            };
-
-
-            var genres = new List<Genre>()
-            {
-                new Genre
-                {
-                    GenreId= 0,
-                    GenreName ="Fantasy",
-                    Games = new List<Game>{}
-
-                }
-
-            
-            };
-
-            
+            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
+            //  to avoid creating duplicate seed data. E.g.
+            //
+            //    context.People.AddOrUpdate(
+            //      p => p.FullName,
+            //      new Person { FullName = "Andrew Peters" },
+            //      new Person { FullName = "Brice Lambson" },
+            //      new Person { FullName = "Rowan Miller" }
+            //    );
+            //
         }
     }
 }
