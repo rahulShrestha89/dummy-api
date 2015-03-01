@@ -12,8 +12,13 @@ using System.Security.Cryptography;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseApiController
     {
+        public UserController(IGameStoreRepository repository)
+            : base(repository)
+        {
+            
+        }
         private GameStoreContext db = new GameStoreContext();
 
         // GET: /User/

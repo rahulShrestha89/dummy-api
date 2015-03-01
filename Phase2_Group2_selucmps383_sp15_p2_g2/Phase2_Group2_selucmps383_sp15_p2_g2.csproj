@@ -223,6 +223,7 @@
     <Compile Include="Controllers\GenreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TagController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DbContext\GameStoreContext.cs" />
     <Compile Include="Entities\Cart.cs" />
     <Compile Include="Entities\Game.cs" />
@@ -236,6 +237,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\GameModel.cs" />
+    <Compile Include="Models\UserBaseModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Repository\GameStoreRepository.cs" />
     <Compile Include="Repository\IGameStoreRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -351,7 +355,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
