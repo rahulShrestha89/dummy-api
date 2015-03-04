@@ -18,7 +18,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2
 
             config.Routes.MapHttpRoute(
                 name: "ApiKey",
-                routeTemplate: "ap/ApiKey",
+                routeTemplate: "api/ApiKey",
                 defaults: new { id = RouteParameter.Optional },
                 constraints: null,
                 handler: new Login()
