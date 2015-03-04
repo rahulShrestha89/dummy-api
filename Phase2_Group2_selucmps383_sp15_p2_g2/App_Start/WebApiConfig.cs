@@ -17,6 +17,14 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2
             config.EnableCors(cors);
 
             config.Routes.MapHttpRoute(
+                name: "ApiKey",
+                routeTemplate: "ap/ApiKey",
+                defaults: new { id = RouteParameter.Optional },
+                constraints: null,
+                handler: new Login()
+                );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
