@@ -9,28 +9,40 @@ using System.Web.Mvc;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
 using System.Security.Cryptography;
+using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
 {
     public class UserController : BaseApiController
     {
-        private ModelFactory factory = new ModelFactory();
+        private GameStoreContext db = new GameStoreContext();
         public UserController(IGameStoreRepository repository)
             : base(repository)
         {
             
         }
 
-        // GET: /User/
-        public IQueryable<UserBaseModel> GetUsers()
-        {
-            if (!IsStoreAdmin())
-            {
-                return
-            }
-            return db.Users.Include(u=>u.Role).Select(factory.Create);
-        }
+        //// GET: /User/
+        //public IQueryable<UserBaseModel> GetUsers()
+        //{
+        //    if (!IsStoreAdmin())
+        //    {
+        //        return
+        //    }
+        //    return db.Users.Include(u=>u.Role).Select(factory.Create);
+        //}
 
+        //[ResponseType(typeof(UserBaseModel))]
+        //public IHttpActionResult GetUser(int userId)
+        //{
+        //    if (!CanAccessUser(userId))
+        //    {
+        //        return Unauthorized();
+        //    }
+
+        //    UserBaseModeluser = 
+        //}
         // GET: /User/Details/5
         public ActionResult Details(int? id)
         {
