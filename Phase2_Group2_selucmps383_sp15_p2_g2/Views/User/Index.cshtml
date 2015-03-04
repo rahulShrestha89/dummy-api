@@ -1,1 +1,60 @@
-﻿
+﻿<div>
+    <h3>User List</h3>
+    <input type="button" value="GetAll" onclick="GetAllUsers()" />
+    <ul id="users" />
+</div>
+<div>
+    <h3>Search Users by ID</h3>
+    <input type="text" id="UserId" size="5" />
+    <input type="button" value="Search" onclick="FindUser()" />
+    <p id="user" />
+</div>
+<div>
+
+
+    @section scripts{
+        <script>
+
+            function GetAllUsers() {
+                $.ajax({
+                    url: '/API/User',
+                    type: 'GET',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('x-cmps-383-authentication-key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x-cmps-383-authentication-id', $.cookie('UserId'));
+                    },
+                    success: function (users) {
+                        var list = $('#users');
+                        for (var i = 0; i < users.length; i++) {
+                            var user = users[i];
+                            list.append('<li>' + user.Id + "   " + user.FirstName + " " + user.LastName + " " + user.Email + '</li>');
+                        }
+                    },
+                    error: function () {
+                        alert('Some error occurred')
+                    },
+
+                });
+
+            }
+
+            function FindUser() {
+                var id = $('#UserId').val();
+                $.ajax({
+                    url: '/API/User/' + id,
+                    type: 'GET',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('x-cmps-383-authentication-key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x-cmps-383-authentication-id', $.cookie('UserId'));
+                    },
+                    success: function (result) {
+                        $('#user').text(result.FirstName + " " + result.LastName + " " + result.Email);
+                        for (var i = 0; i <= result.Roles.Count; i++)
+                            $('#user').text(result.Roles);
+                    },
+                    error: (function (jqXHR, textStatus, err) {
+                        $('#user').text('Error: ' + err);
+                    })
+                });
+            }
+        </script>
