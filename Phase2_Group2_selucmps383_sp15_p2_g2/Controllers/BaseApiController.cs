@@ -11,8 +11,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
 {
     public class BaseApiController : ApiController
     {
-        private User storeUser;
-        private IGameStoreRepository _repo ;
+        public User storeUser;
+        public IGameStoreRepository _repo ;
+        public ModelFactory _modelFactory;
 
         public BaseApiController(IGameStoreRepository repo)
         {
@@ -23,6 +24,18 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
         protected IGameStoreRepository TheRepository
         {
             get { return _repo; }
+        }
+
+        protected ModelFactory TheModelFactory
+        {
+            get
+            {
+                if (_modelFactory == null)
+                {
+                    _modelFactory = new ModelFactory(Request, TheRepository);
+                }
+                return _modelFactory;
+            }
         }
 
         protected bool IsStoreAdmin()

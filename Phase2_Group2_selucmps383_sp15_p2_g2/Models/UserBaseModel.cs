@@ -12,6 +12,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         public string Url { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
         public Enums.Role Role { get; set; }
         
 

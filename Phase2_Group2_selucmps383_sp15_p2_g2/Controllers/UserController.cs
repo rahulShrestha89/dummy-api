@@ -14,18 +14,21 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
 {
     public class UserController : BaseApiController
     {
+        private ModelFactory factory = new ModelFactory();
         public UserController(IGameStoreRepository repository)
             : base(repository)
         {
             
         }
-        private GameStoreContext db = new GameStoreContext();
 
         // GET: /User/
-        public ActionResult Index()
+        public IQueryable<UserBaseModel> GetUsers()
         {
-            var users = db.Users.Include(u => u.Role);
-            return View(users.ToList());
+            if (!IsStoreAdmin())
+            {
+                return
+            }
+            return db.Users.Include(u=>u.Role).Select(factory.Create);
         }
 
         // GET: /User/Details/5
