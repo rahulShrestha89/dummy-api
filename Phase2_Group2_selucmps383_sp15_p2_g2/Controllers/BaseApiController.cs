@@ -20,6 +20,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
         public User storeUser;
         public GameStoreContext _db;
         
+        
         public IGameStoreRepository _repo ;
         public ModelFactory _modelFactory;
         
@@ -27,6 +28,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
         public BaseApiController(IGameStoreRepository repo)
         {
             _repo = repo;
+           
             string h1 = Request.Headers.ElementAt(0).ToString();
             string h2 = Request.Headers.ElementAt(1).ToString();
 
