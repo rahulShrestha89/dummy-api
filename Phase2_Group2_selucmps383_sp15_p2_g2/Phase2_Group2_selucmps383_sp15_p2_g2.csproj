@@ -223,6 +223,8 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Authentication\Header.cs" />
+    <Compile Include="Authentication\ValidateByApiKey.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\GameController.cs" />
