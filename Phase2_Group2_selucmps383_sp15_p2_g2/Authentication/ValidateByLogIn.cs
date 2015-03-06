@@ -6,6 +6,7 @@ using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Net.Http;
+using System.Web.Helpers;
 
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
@@ -42,6 +43,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
 
                             HttpContext.Current.Response.Headers.Add("AuthenticationStatus", "User Authorized.");
                             HttpContext.Current.Response.Headers.Add("ApiKey", user.ApiKey);
+                            HttpContext.Current.Response.Headers.Add("UserId", user.UserId.ToString());
                             return;
                             
                         }
@@ -54,6 +56,16 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
 
             actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.ExpectationFailed, "Key Values :::" + Header.Email + " and | or " + Header.Password + " were not included in your request");
             return;
+        }
+
+        private static string GetApiKey()
+        {
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                var bytes = new byte[16];
+                rng.GetBytes(bytes);
+                return Convert.ToBase64String(bytes);
+            }
         }
     }
 }

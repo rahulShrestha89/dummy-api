@@ -230,6 +230,7 @@
     <Compile Include="Authentication\RepresentationBuilder.cs" />
     <Compile Include="Authentication\ValidateByApiKey.cs" />
     <Compile Include="Authentication\ValidateByHmac.cs" />
+    <Compile Include="Authentication\ValidateByLogIn.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\GameController.cs" />
