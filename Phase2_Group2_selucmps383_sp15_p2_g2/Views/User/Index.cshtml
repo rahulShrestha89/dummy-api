@@ -10,6 +10,29 @@
     <p id="user" />
 </div>
 <div>
+    <h3>Add User </h3>
+    <table>
+        <tr>
+            <td>First Name</td>
+            <td><input type="text" id="txtFirstName" /></td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td><input type="text" id="txtLastName" /></td>
+        </tr>
+        <tr>
+            <td>Email Address</td>
+            <td><input type="text" id="txtEmail" /></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" id="txtPassword" /></td>
+        </tr>
+        <tr>
+            <td colspan="3" align="left"><input type="button" value="Add" onclick="AddUser()" /></td>
+        </tr>
+    </table>
+</div>
 
 
     @section scripts{
@@ -20,18 +43,18 @@
                     url: '/API/User',
                     type: 'GET',
                     beforeSend: function (xhr) {
-                        xhr.setRequestHeader('x-cmps-383-authentication-key', $.cookie('ApiKey'));
-                        xhr.setRequestHeader('x-cmps-383-authentication-id', $.cookie('UserId'));
+                        xhr.setRequestHeader('x_cmps383_authentication_key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x_cmps383-authentication_id', $.cookie('UserId'));
                     },
                     success: function (users) {
                         var list = $('#users');
                         for (var i = 0; i < users.length; i++) {
                             var user = users[i];
-                            list.append('<li>' + user.Id + "   " + user.FirstName + " " + user.LastName + " " + user.Email + '</li>');
+                            list.append('<li>' + user.UserId + "   " + user.FirstName + " " + user.LastName + " " + user.Email + '</li>');
                         }
                     },
                     error: function () {
-                        alert('Some error occurred')
+                        alert('Sorry! Error Occured!')
                     },
 
                 });
@@ -44,8 +67,8 @@
                     url: '/API/User/' + id,
                     type: 'GET',
                     beforeSend: function (xhr) {
-                        xhr.setRequestHeader('x-cmps-383-authentication-key', $.cookie('ApiKey'));
-                        xhr.setRequestHeader('x-cmps-383-authentication-id', $.cookie('UserId'));
+                        xhr.setRequestHeader('x_cmps383_authentication_key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x_cmps383_authentication_id', $.cookie('UserId'));
                     },
                     success: function (result) {
                         $('#user').text(result.FirstName + " " + result.LastName + " " + result.Email);
@@ -55,6 +78,34 @@
                     error: (function (jqXHR, textStatus, err) {
                         $('#user').text('Error: ' + err);
                     })
+                });
+            }
+
+            function AddUser() {
+
+                var user = {
+                    FirstName: $('#txtFirstName').val(),
+                    LastName: $('#txtLastName').val(),
+                    Email: $('#txtEmail').val(),
+                    Password: $('#txtPassword').val(),
+                };
+
+                $.ajax({
+                    url: '/API/User',
+                    type: 'POST',
+                    data: JSON.stringify(user),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('x_cmps383_authentication_key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x_cmps383_authentication_id', $.cookie('UserId'));
+                    },
+                    success: function (data) {
+                        alert('User added!');
+                        GetAllUsers();
+                    },
+                    error: function () {
+                        alert('Sorry! Error Occured!');
+                    }
                 });
             }
         </script>
