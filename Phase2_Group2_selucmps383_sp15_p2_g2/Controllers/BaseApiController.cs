@@ -4,12 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+
 using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
 {
+    
     // make base controller abstract so it cannot be instantiated
     // all our controllers will derive from the base controller to
     // inherit common functionality
@@ -25,7 +27,10 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
         public BaseApiController(IGameStoreRepository repo)
         {
             _repo = repo;
-            storeUser = new User();
+            string h1 = Request.Headers.ElementAt(0).ToString();
+            string h2 = Request.Headers.ElementAt(1).ToString();
+
+            storeUser = _db.Users.Where(s => s.EmailAddress == h1 && s.ApiKey == h2).FirstOrDefault();
         }
 
         protected IGameStoreRepository TheRepository
