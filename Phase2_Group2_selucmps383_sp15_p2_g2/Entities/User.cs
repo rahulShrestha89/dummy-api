@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -26,6 +27,8 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Index("IX_EmailAddress", IsUnique=true)]
+        [StringLength(400)]
         [Display(Name = "User Name")]
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Enter a Valid email-address...")]
