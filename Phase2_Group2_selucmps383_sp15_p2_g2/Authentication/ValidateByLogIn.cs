@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Http;
 using System.Net.Http;
 using System.Web.Helpers;
+using System.Security.Cryptography;
 
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication

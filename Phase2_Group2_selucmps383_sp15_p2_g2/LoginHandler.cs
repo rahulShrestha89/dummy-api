@@ -6,7 +6,6 @@ using System.Web;
 using System.Threading.Tasks;
 using System.Threading;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
-using System.Net.Http;
 using System.Web.Helpers;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2
