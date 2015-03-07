@@ -1,0 +1,111 @@
+﻿<div>
+    <h3>Games List</h3>
+    <input type="button" value="GetAll" onclick="GetGames()" />
+    <ul id="games" />
+</div>
+<div>
+    <h3>Find Game by ID</h3>
+    <input type="text" id="GameId" size="5" />
+    <input type="button" value="Search" onclick="FindGame()" />
+    <p id="game"/>
+</div>
+<div>
+    <h3>Add Game </h3>
+    <table>
+        <tr>
+            <td>Game Name</td>
+            <td><input type="text" id="txtGameName" /></td>
+        </tr>
+        <tr>
+            <td>Release Date</td>
+            <td><input type="text" id="txtReleaseDate" /></td>
+        </tr>
+        <tr>
+            <td>Game Price</td>
+            <td><input type="text" id="txtPrice" /></td>
+        </tr>
+        <tr>
+            <td>Inventory Count</td>
+            <td><input type="text" id="txtCount" /></td>
+        </tr>
+        <tr>
+            <td colspan="3" align="left"><input type="button" value="Add" onclick="AddGame()" /></td>
+        </tr>
+    </table>
+</div>
+
+
+@section scripts{
+    <script>
+
+            function GetGames() {
+                $.ajax({
+                    url: '/API/Game',
+                    type: 'GET',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('x_cmps383_authentication_key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x_cmps383-authentication_id', $.cookie('UserId'));
+                    },
+                    success: function (games) {
+                        var list = $('#games');
+                        for (var i = 0; i < games.length; i++) {
+                            var game = games[i];
+                            list.append('<li>' + game.GameId + " " + game.GameName + " " + game.ReleaseDate + " " + game.GamePrice +" "+game.InventoryCount+'</li>');
+                        }
+                    },
+                    error: function () {
+                        alert('Sorry! Error Occured!')
+                    },
+
+                });
+
+            }
+
+            function FindGame() {
+                var id = $('#GameId').val();
+                $.ajax({
+                    url: '/API/Game/' + id,
+                    type: 'GET',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('x_cmps383_authentication_key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x_cmps383_authentication_id', $.cookie('UserId'));
+                    },
+                    success: function (result) {
+                        $('#game').text(result.GameName + " " + result.ReleaseDate + " " + result.GamePrice + " " +game.InventoryCount );
+                    },
+                    error: (function (jqXHR, textStatus, err) {
+                        $('#game').text('Error: ' + err);
+                    })
+                });
+            }
+
+            function AddGame() {
+
+                var game = {
+                    GameName: $('#txtGameName').val(),
+                    ReleaseDate: $('#txtReleaseDate').val(),
+                    GamePrice: $('#txtPrice').val(),
+                    InventoryCount: $('#txtCount').val(),
+                };
+
+                $.ajax({
+                    url: '/API/Game',
+                    type: 'POST',
+                    data: JSON.stringify(game),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('x_cmps383_authentication_key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x_cmps383_authentication_id', $.cookie('UserId'));
+                    },
+                    success: function (data) {
+                        alert('Game added!');
+                        GetGames();
+                    },
+                    error: function () {
+                        alert('Sorry! Error Occured!');
+                    }
+                });
+            }
+        </script>
+    }
+

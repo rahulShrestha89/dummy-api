@@ -234,6 +234,7 @@
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\GameController.cs" />
+    <Compile Include="Controllers\GamesController.cs" />
     <Compile Include="Controllers\GenreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TagController.cs" />
@@ -249,10 +250,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="LoginHandler.cs" />
-    <Compile Include="Migrations\201503062114400_GameStoreContext.cs" />
-    <Compile Include="Migrations\201503062114400_GameStoreContext.Designer.cs">
-      <DependentUpon>201503062114400_GameStoreContext.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\ModelFactory.cs" />
@@ -366,17 +363,13 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Games\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201503062114400_GameStoreContext.resx">
-      <DependentUpon>201503062114400_GameStoreContext.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
