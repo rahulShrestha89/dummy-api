@@ -9,7 +9,7 @@ using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
 
-namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
+namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
     
     // make base controller abstract so it cannot be instantiated
@@ -23,8 +23,11 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
         
         public IGameStoreRepository _repo ;
         public ModelFactory _modelFactory;
-        
 
+        public BaseApiController()
+        {
+
+        }
         public BaseApiController(IGameStoreRepository repo)
         {
             _repo = repo;

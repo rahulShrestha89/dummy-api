@@ -6,58 +6,59 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
 
-namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
+namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
-    public class TagController : ApiController
+    public class CartController : ApiController
     {
         private GameStoreContext db = new GameStoreContext();
 
-        // GET api/Tag
-        public IQueryable<Tag> GetTags()
+        // GET api/Cart
+        public IQueryable<Cart> GetCarts()
         {
-            return db.Tags;
+            return db.Carts;
         }
 
-        // GET api/Tag/5
-        [ResponseType(typeof(Tag))]
-        public IHttpActionResult GetTag(int id)
+        // GET api/Cart/5
+        [ResponseType(typeof(Cart))]
+        public async Task<IHttpActionResult> GetCart(int id)
         {
-            Tag tag = db.Tags.Find(id);
-            if (tag == null)
+            Cart cart = await db.Carts.FindAsync(id);
+            if (cart == null)
             {
                 return NotFound();
             }
 
-            return Ok(tag);
+            return Ok(cart);
         }
 
-        // PUT api/Tag/5
-        public IHttpActionResult PutTag(int id, Tag tag)
+        // PUT api/Cart/5
+        public async Task<IHttpActionResult> PutCart(int id, Cart cart)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != tag.TagId)
+            if (id != cart.CartId)
             {
                 return BadRequest();
             }
 
-            db.Entry(tag).State = EntityState.Modified;
+            db.Entry(cart).State = EntityState.Modified;
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TagExists(id))
+                if (!CartExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +71,35 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST api/Tag
-        [ResponseType(typeof(Tag))]
-        public IHttpActionResult PostTag(Tag tag)
+        // POST api/Cart
+        [ResponseType(typeof(Cart))]
+        public async Task<IHttpActionResult> PostCart(Cart cart)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Tags.Add(tag);
-            db.SaveChanges();
+            db.Carts.Add(cart);
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = tag.TagId }, tag);
+            return CreatedAtRoute("DefaultApi", new { id = cart.CartId }, cart);
         }
 
-        // DELETE api/Tag/5
-        [ResponseType(typeof(Tag))]
-        public IHttpActionResult DeleteTag(int id)
+        // DELETE api/Cart/5
+        [ResponseType(typeof(Cart))]
+        public async Task<IHttpActionResult> DeleteCart(int id)
         {
-            Tag tag = db.Tags.Find(id);
-            if (tag == null)
+            Cart cart = await db.Carts.FindAsync(id);
+            if (cart == null)
             {
                 return NotFound();
             }
 
-            db.Tags.Remove(tag);
-            db.SaveChanges();
+            db.Carts.Remove(cart);
+            await db.SaveChangesAsync();
 
-            return Ok(tag);
+            return Ok(cart);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +111,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
             base.Dispose(disposing);
         }
 
-        private bool TagExists(int id)
+        private bool CartExists(int id)
         {
-            return db.Tags.Count(e => e.TagId == id) > 0;
+            return db.Carts.Count(e => e.CartId == id) > 0;
         }
     }
 }

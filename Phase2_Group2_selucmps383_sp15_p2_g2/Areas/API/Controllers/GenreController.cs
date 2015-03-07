@@ -6,59 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
 
-namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
+namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
-    public class CartController : ApiController
+    public class GenreController : ApiController
     {
         private GameStoreContext db = new GameStoreContext();
 
-        // GET api/Cart
-        public IQueryable<Cart> GetCarts()
+        // GET api/Genre
+        public IQueryable<Genre> GetGenres()
         {
-            return db.Carts;
+            return db.Genres;
         }
 
-        // GET api/Cart/5
-        [ResponseType(typeof(Cart))]
-        public async Task<IHttpActionResult> GetCart(int id)
+        // GET api/Genre/5
+        [ResponseType(typeof(Genre))]
+        public IHttpActionResult GetGenre(int id)
         {
-            Cart cart = await db.Carts.FindAsync(id);
-            if (cart == null)
+            Genre genre = db.Genres.Find(id);
+            if (genre == null)
             {
                 return NotFound();
             }
 
-            return Ok(cart);
+            return Ok(genre);
         }
 
-        // PUT api/Cart/5
-        public async Task<IHttpActionResult> PutCart(int id, Cart cart)
+        // PUT api/Genre/5
+        public IHttpActionResult PutGenre(int id, Genre genre)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != cart.CartId)
+            if (id != genre.GenreId)
             {
                 return BadRequest();
             }
 
-            db.Entry(cart).State = EntityState.Modified;
+            db.Entry(genre).State = EntityState.Modified;
 
             try
             {
-                await db.SaveChangesAsync();
+                db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CartExists(id))
+                if (!GenreExists(id))
                 {
                     return NotFound();
                 }
@@ -71,35 +70,35 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST api/Cart
-        [ResponseType(typeof(Cart))]
-        public async Task<IHttpActionResult> PostCart(Cart cart)
+        // POST api/Genre
+        [ResponseType(typeof(Genre))]
+        public IHttpActionResult PostGenre(Genre genre)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Carts.Add(cart);
-            await db.SaveChangesAsync();
+            db.Genres.Add(genre);
+            db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = cart.CartId }, cart);
+            return CreatedAtRoute("DefaultApi", new { id = genre.GenreId }, genre);
         }
 
-        // DELETE api/Cart/5
-        [ResponseType(typeof(Cart))]
-        public async Task<IHttpActionResult> DeleteCart(int id)
+        // DELETE api/Genre/5
+        [ResponseType(typeof(Genre))]
+        public IHttpActionResult DeleteGenre(int id)
         {
-            Cart cart = await db.Carts.FindAsync(id);
-            if (cart == null)
+            Genre genre = db.Genres.Find(id);
+            if (genre == null)
             {
                 return NotFound();
             }
 
-            db.Carts.Remove(cart);
-            await db.SaveChangesAsync();
+            db.Genres.Remove(genre);
+            db.SaveChanges();
 
-            return Ok(cart);
+            return Ok(genre);
         }
 
         protected override void Dispose(bool disposing)
@@ -111,9 +110,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
             base.Dispose(disposing);
         }
 
-        private bool CartExists(int id)
+        private bool GenreExists(int id)
         {
-            return db.Carts.Count(e => e.CartId == id) > 0;
+            return db.Genres.Count(e => e.GenreId == id) > 0;
         }
     }
 }

@@ -11,45 +11,45 @@ using System.Web.Http.Description;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
 
-namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
+namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
-    public class GenreController : ApiController
+    public class TagController : ApiController
     {
         private GameStoreContext db = new GameStoreContext();
 
-        // GET api/Genre
-        public IQueryable<Genre> GetGenres()
+        // GET api/Tag
+        public IQueryable<Tag> GetTags()
         {
-            return db.Genres;
+            return db.Tags;
         }
 
-        // GET api/Genre/5
-        [ResponseType(typeof(Genre))]
-        public IHttpActionResult GetGenre(int id)
+        // GET api/Tag/5
+        [ResponseType(typeof(Tag))]
+        public IHttpActionResult GetTag(int id)
         {
-            Genre genre = db.Genres.Find(id);
-            if (genre == null)
+            Tag tag = db.Tags.Find(id);
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            return Ok(genre);
+            return Ok(tag);
         }
 
-        // PUT api/Genre/5
-        public IHttpActionResult PutGenre(int id, Genre genre)
+        // PUT api/Tag/5
+        public IHttpActionResult PutTag(int id, Tag tag)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != genre.GenreId)
+            if (id != tag.TagId)
             {
                 return BadRequest();
             }
 
-            db.Entry(genre).State = EntityState.Modified;
+            db.Entry(tag).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GenreExists(id))
+                if (!TagExists(id))
                 {
                     return NotFound();
                 }
@@ -70,35 +70,35 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST api/Genre
-        [ResponseType(typeof(Genre))]
-        public IHttpActionResult PostGenre(Genre genre)
+        // POST api/Tag
+        [ResponseType(typeof(Tag))]
+        public IHttpActionResult PostTag(Tag tag)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Genres.Add(genre);
+            db.Tags.Add(tag);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = genre.GenreId }, genre);
+            return CreatedAtRoute("DefaultApi", new { id = tag.TagId }, tag);
         }
 
-        // DELETE api/Genre/5
-        [ResponseType(typeof(Genre))]
-        public IHttpActionResult DeleteGenre(int id)
+        // DELETE api/Tag/5
+        [ResponseType(typeof(Tag))]
+        public IHttpActionResult DeleteTag(int id)
         {
-            Genre genre = db.Genres.Find(id);
-            if (genre == null)
+            Tag tag = db.Tags.Find(id);
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            db.Genres.Remove(genre);
+            db.Tags.Remove(tag);
             db.SaveChanges();
 
-            return Ok(genre);
+            return Ok(tag);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +110,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
             base.Dispose(disposing);
         }
 
-        private bool GenreExists(int id)
+        private bool TagExists(int id)
         {
-            return db.Genres.Count(e => e.GenreId == id) > 0;
+            return db.Tags.Count(e => e.TagId == id) > 0;
         }
     }
 }

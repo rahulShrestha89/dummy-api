@@ -232,15 +232,17 @@
     <Compile Include="Authentication\ValidateByApiKey.cs" />
     <Compile Include="Authentication\ValidateByHmac.cs" />
     <Compile Include="Authentication\ValidateByLogIn.cs" />
-    <Compile Include="Controllers\BaseApiController.cs" />
-    <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Areas\API\Controllers\BaseApiController.cs" />
+    <Compile Include="Areas\API\Controllers\CartController.cs" />
+    <Compile Include="Areas\API\Controllers\GameController.cs" />
+    <Compile Include="Areas\API\Controllers\GenreController.cs" />
     <Compile Include="Controllers\GameController.cs" />
-    <Compile Include="Controllers\GenreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\TagController.cs" />
-    <Compile Include="Controllers\UserController.cs">
+    <Compile Include="Areas\API\Controllers\TagController.cs" />
+    <Compile Include="Areas\API\Controllers\UserController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DbContext\GameStoreContext.cs" />
     <Compile Include="Entities\Cart.cs" />
     <Compile Include="Entities\Game.cs" />
@@ -374,6 +376,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Game\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

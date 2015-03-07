@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Net.Http;
 using System.Net;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Controllers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
 {

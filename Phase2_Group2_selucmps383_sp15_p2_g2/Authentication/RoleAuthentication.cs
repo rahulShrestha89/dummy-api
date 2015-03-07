@@ -9,6 +9,7 @@ using System.Web.Http.Controllers;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Controllers;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
 {
