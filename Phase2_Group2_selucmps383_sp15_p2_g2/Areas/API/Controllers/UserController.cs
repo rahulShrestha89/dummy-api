@@ -43,7 +43,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             //{
             //    return storeUser.
             //}
-            return db.Users.Select(u=>_modelFactory.Create(u));
+            return _repo.GetAllUsers().Select(u=>_modelFactory.Create(u));
         }
 
         ////[ResponseType(typeof(UserBaseModel))]

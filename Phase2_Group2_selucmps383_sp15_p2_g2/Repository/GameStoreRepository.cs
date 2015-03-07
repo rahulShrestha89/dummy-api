@@ -20,6 +20,10 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             _context = context;
         }
 
+        public IQueryable<User> GetAllUsers()
+        {
+            return _context.Users;
+        }
 
         /// <summary>
         /// Lists all games.
