@@ -12,8 +12,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2
     {
         public static void Register(HttpConfiguration config)
         {
-            //Allows for any origin to make a COR.
-            var cors = new EnableCorsAttribute("*", "*", "*");
+            //Allows for any origin to make a CORS
+            //Support for CORS
+            var cors = new EnableCorsAttribute("*", "*", "GET,POST");
             config.EnableCors(cors);
 
             config.Routes.MapHttpRoute(
@@ -23,6 +24,13 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2
                 constraints: null,
                 handler: new Login()
                 );
+            
+            config.Routes.MapHttpRoute(
+    name: "GetAllUsers",
+    routeTemplate: "api/{controller}",
+    defaults: new { action = "GetUsers" }
+);
+
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

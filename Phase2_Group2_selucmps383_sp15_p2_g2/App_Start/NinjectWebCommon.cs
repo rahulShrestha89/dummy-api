@@ -7,6 +7,7 @@ using Ninject;
 using Ninject.Web.Common;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
+using WebApiContrib.IoC.Ninject;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.App_Start
 {
@@ -22,6 +23,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.App_Start
  
             //Suport WebAPI Injection
             GlobalConfiguration.Configuration.DependencyResolver = new WebApiContrib.IoC.Ninject.NinjectResolver(kernel);
+
+            GlobalConfiguration.Configuration.DependencyResolver = new NinjectResolver(kernel);
+
  
             RegisterServices(kernel);
             return kernel;

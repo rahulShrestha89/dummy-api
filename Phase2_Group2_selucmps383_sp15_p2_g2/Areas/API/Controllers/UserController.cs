@@ -21,12 +21,17 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         ModelFactory _modelFactory;
         private GameStoreContext db = new GameStoreContext();
 
+        public UserController()
+        {
+
+        }
         public UserController(IGameStoreRepository repository)     
         {
             _repo = repository;
             _modelFactory = new ModelFactory();   
         }
 
+        [System.Web.Http.ActionName("GetUsers")]
         /// GET: api/users
         /// <summary>
         /// returns all the users
@@ -38,9 +43,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             //{
             //    return storeUser.
             //}
-            
-            var results = db.Users.Select(u=>_modelFactory.Create(u));
-            return results;
+            return db.Users.Select(u=>_modelFactory.Create(u));
         }
 
         ////[ResponseType(typeof(UserBaseModel))]
@@ -162,7 +165,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         //    base.Dispose(disposing);
         //}
 
-        public string GetApiKey()
+        public static string GetApiKey()
         {
             using (var rng = new RNGCryptoServiceProvider())
             {
