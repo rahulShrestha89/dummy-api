@@ -18,6 +18,11 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
             _repository = repository; 
         }
 
+        public ModelFactory()
+        {
+            // TODO: Complete member initialization
+        }
+
         public UserModel Create(User user)
         {
             return new UserModel()
@@ -29,17 +34,17 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
                 LastName = user.LastName,
                 Role = user.Role,
                 CustomerCart = user.CustomerCart,
-                Sales = user.Sales.Select(c => Create(c))
+                Sales = user.Sales.Select(s => Create(s))
             };
         }
 
-        public SaleModel Create(Sale c)
+        public SaleModel Create(Sale sale)
         {
             return new SaleModel()
             {
-                SaleDate = c.SaleDate,
-                SaleId = c.SaleId,
-                TotalAmount = c.TotalAmount
+                SaleDate = sale.SaleDate,
+                SaleId = sale.SaleId,
+                TotalAmount = sale.TotalAmount
             };
            
         }
