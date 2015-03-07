@@ -29,8 +29,19 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
                 LastName = user.LastName,
                 Role = user.Role,
                 CustomerCart = user.CustomerCart,
-                //Sales = user.Sales.Select(c=>Create(c));
+                Sales = user.Sales.Select(c => Create(c))
             };
+        }
+
+        public SaleModel Create(Sale c)
+        {
+            return new SaleModel()
+            {
+                SaleDate = c.SaleDate,
+                SaleId = c.SaleId,
+                TotalAmount = c.TotalAmount
+            };
+           
         }
 
         public UserBaseModel CreateUserSummary(User user)

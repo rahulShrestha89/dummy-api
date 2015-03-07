@@ -1,24 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 {
-    public class Sale
+    public class SaleModel
     {
-        public Sale()
-        {
-            CompanyUser = new User();
-        }
-
         public int SaleId { get; set; }
-
+        public UserModel User { get; set; }
         public decimal? TotalAmount { get; set; }
-
         public DateTime? SaleDate { get; set; }
-
-        public int UserId { get; set; }
-        public User User { get; set; }
     }
 }

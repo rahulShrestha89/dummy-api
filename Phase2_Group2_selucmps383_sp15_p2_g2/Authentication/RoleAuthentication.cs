@@ -56,7 +56,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
             }
 
             actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized,
-                "Higher Authorization Level Required");
+                "Higher Authorization Level Required!");
             return;
         }
     }

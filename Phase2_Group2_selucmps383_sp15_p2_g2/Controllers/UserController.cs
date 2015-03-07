@@ -23,15 +23,15 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Controllers
             
         }
 
-        //// GET: /User/
-        //public IQueryable<UserBaseModel> GetUsers()
-        //{
-        //    if (!IsStoreAdmin())
-        //    {
-        //        return
-        //    }
-        //    return db.Users.Include(u=>u.Role).Select(factory.Create);
-        //}
+        // GET: /User/
+        public IQueryable<UserBaseModel> GetUsers()
+        {
+            if (!IsStoreAdmin())
+            {
+                return
+            }
+            return db.Users.Include(u=>u.Role).Select(factory.Create);
+        }
 
         //[ResponseType(typeof(UserBaseModel))]
         //public IHttpActionResult GetUser(int userId)
