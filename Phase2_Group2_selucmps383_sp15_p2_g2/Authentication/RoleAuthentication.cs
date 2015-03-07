@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Controllers;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
 {
@@ -35,9 +36,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
         public override void OnAuthorization(HttpActionContext actionContext)
         {
             Controller = (BaseApiController)actionContext.ControllerContext.Controller;
-            user = Controller.GameStoreUser;
+            user = Controller.storeUser;
 
-            var userRoles = user.Roles.Select(r => r.RoleName);
+            var userRoles = Enum.GetName(typeof(Role), user.Role);
 
             if (userRoles.Contains("StoreAdmin"))
             {
