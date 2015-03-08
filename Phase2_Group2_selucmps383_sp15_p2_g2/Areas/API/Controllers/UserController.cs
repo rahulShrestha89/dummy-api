@@ -74,7 +74,12 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             return Ok(user);
         }
 
-        //// POST: /User/PostUser
+        /// POST: /User/PostUser
+        /// <summary>
+        /// Creates a user from a form. Only Accessible by Store Admin.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [System.Web.Http.HttpPost]
         [RoleAuthentication("StoreAdmin")]
         [ValidateAntiForgeryToken]
@@ -90,8 +95,8 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             user.ApiKey = GetApiKey();
             string hashedPassword = Crypto.HashPassword(user.Password);
             user.Password = hashedPassword;
-            db.Users.Add(user);
-            db.SaveChanges();
+            _repo.AddUser(user);
+            _repo.SaveAll();
 
             return CreatedAtRoute("DefaultApi", new { id = user.UserId }, user);
         }

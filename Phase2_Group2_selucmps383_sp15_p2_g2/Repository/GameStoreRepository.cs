@@ -125,7 +125,10 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             return false;
         }
 
-       
+       public void AddUser(User user)
+        {
+            _context.Users.Add(user);
+        }
 
 
         public void Dispose(bool disposing)

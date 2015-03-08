@@ -24,6 +24,8 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         IQueryable<User> GetAllUsers();
         User GetUserById(int userId);
 
+        void AddUser(User user);
+
         bool IsAuthorizedUser(string emailAddress, string password);
 
         bool SaveAll();
