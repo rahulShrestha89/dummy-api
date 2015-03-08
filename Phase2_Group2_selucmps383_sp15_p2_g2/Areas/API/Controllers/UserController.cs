@@ -118,7 +118,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 return BadRequest();
             }
 
-            var checkUserInDb = db.Users.FirstOrDefault(u => u.UserId == id);   // check if the user exists
+            var checkUserInDb = _repo.GetUserById(id);   // check if the user exists
             if (checkUserInDb == null)
             {
                 return NotFound();
@@ -156,11 +156,18 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 checkUserInDb.EmailAddress = user.EmailAddress;
             }
 
-            db.Entry(checkUserInDb).State = EntityState.Modified;
+            _repo.UpdateUser(id, checkUserInDb);
 
             try
             {
-                db.SaveChanges();
+                if(_repo.SaveAll())
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -174,7 +181,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+           // return StatusCode(HttpStatusCode.NoContent);
         }
 
         private bool UserExists(int id)

@@ -25,6 +25,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         User GetUserById(int userId);
 
         void AddUser(User user);
+        void UpdateUser(int id, User checkUserInDb);
 
         bool IsAuthorizedUser(string emailAddress, string password);
 

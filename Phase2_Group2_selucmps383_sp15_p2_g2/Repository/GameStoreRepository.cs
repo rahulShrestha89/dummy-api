@@ -124,12 +124,20 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             }
             return false;
         }
-
+        
+        /// <summary>
+        /// Add a new user to the db.
+        /// </summary>
+        /// <param name="user"></param>
        public void AddUser(User user)
         {
             _context.Users.Add(user);
         }
 
+        public void UpdateUser(int id, User checkUserInDb)
+       {
+           _context.Entry(checkUserInDb).State = EntityState.Modified;
+       }
 
         public void Dispose(bool disposing)
         {
