@@ -23,9 +23,14 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         // for  api/user controllers
         IQueryable<User> GetAllUsers();
         User GetUserById(int userId);
-
         void AddUser(User user);
         void UpdateUser(int id, User checkUserInDb);
+
+        // for api/sale controllers
+        IQueryable<Sale> GetAllSales();
+        Sale GetSaleById(int saleId);
+        Sale AddSale(Sale sale);
+        Sale RemoveSale(Sale sale);
 
         bool IsAuthorizedUser(string emailAddress, string password);
 

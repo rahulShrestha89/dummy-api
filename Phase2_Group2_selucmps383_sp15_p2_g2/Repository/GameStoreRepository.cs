@@ -106,6 +106,40 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
                     .Where(u => u.Games.Any(e => e.GameId== gameId));
         }
 
+        /// <summary>
+        /// Lists all sales.
+        /// </summary>
+        /// <returns>Returns a queryable of sales.</returns>
+        public IQueryable<Sale> GetAllSales()
+        {
+            return _context.Sales.AsQueryable();
+        }
+
+        /// <summary>
+        /// Finds a Sale in the db.
+        /// </summary>
+        /// <param name="saleId"></param>
+        /// <returns>Returns the found sale.</returns>
+        public Sale GetSaleById(int saleId)
+        {
+            return _context.Sales.Find(saleId);
+        }
+
+        public void AddSale(Sale sale)
+        {
+            _context.Sales.Add(sale);
+        }
+
+        /// <summary>
+        /// Removes a sale from the db.
+        /// </summary>
+        /// <param name="sale"></param>
+        public void RemoveSale(Sale sale)
+        {
+            _context.Sales.Remove(sale);
+        }
+
+
         public bool GenreExists(int genreId)
         {
             return _context.Games.Count(e => e.GameId == genreId) > 0;
