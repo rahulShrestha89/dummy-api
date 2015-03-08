@@ -20,9 +20,23 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             _context = context;
         }
 
+        /// <summary>
+        /// return all users
+        /// </summary>
+        /// <returns></returns>
         public IQueryable<User> GetAllUsers()
         {
             return _context.Users;
+        }
+
+        /// <summary>
+        /// return user with a specified user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public User GetUserById(int userId)
+        {
+            return _context.Users.Where(u => u.UserId == userId).FirstOrDefault();
         }
 
         /// <summary>

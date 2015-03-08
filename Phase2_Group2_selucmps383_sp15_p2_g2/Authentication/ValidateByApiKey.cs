@@ -51,7 +51,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Authentication
                 actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "Key value" + Header.UserId + " is not a valid key.");
                 return;
             }
-            actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.ExpectationFailed, "Key value " + Header.UserId + "and / or " + Header.Key + "were not included in your request");
+            actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.ExpectationFailed, "API Key Validation fail: Key value " + Header.UserId + " and / or " + Header.Key + " were not included in your request");
         }
 
 

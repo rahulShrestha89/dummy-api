@@ -87,13 +87,5 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             return Enum.GetName(typeof (Role), storeUser.Role) == ("StoreCustomer");
         }
 
-        protected bool CanAccessUser(int userId)
-        {
-            if (IsStoreAdmin())
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }

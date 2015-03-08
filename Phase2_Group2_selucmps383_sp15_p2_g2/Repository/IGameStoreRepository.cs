@@ -20,7 +20,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         Genre GetGenre(int genreId);    // if necessary use bool to check whether a genre belongs to amy game
         bool GenreExists(int genreId);
 
+        // for  api/user controllers
         IQueryable<User> GetAllUsers();
+        User GetUserById(int userId);
 
         bool IsAuthorizedUser(string emailAddress, string password);
 

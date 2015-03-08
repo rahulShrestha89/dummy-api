@@ -12,9 +12,14 @@ using System.Security.Cryptography;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Controllers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Authentication;
+using System.Web.Helpers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
+using System.Data.Entity.Infrastructure;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
+    [ValidateByApiKey]
     public class UserController : BaseApiController
     {
         IGameStoreRepository _repo;
@@ -31,139 +36,172 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             _modelFactory = new ModelFactory();   
         }
 
-        [System.Web.Http.ActionName("GetUsers")]
+        
         /// GET: api/users
         /// <summary>
         /// returns all the users
         /// </summary>
         /// <returns></returns>
-        public IQueryable<UserBaseModel> GetUsers()
+        [RoleAuthentication("StoreAdmin")]
+        [System.Web.Http.ActionName("GetAllUsers")]
+        public IQueryable<UserBaseModel> GetAllUsers()
         {
-            //if (!IsStoreAdmin())
-            //{
-            //    return storeUser.
-            //}
             return _repo.GetAllUsers().Select(u=>_modelFactory.Create(u));
         }
 
-        ////[ResponseType(typeof(UserBaseModel))]
-        ////public IHttpActionResult GetUser(int userId)
-        ////{
-        ////    if (!CanAccessUser(userId))
-        ////    {
-        ////        return Unauthorized();
-        ////    }
 
-        ////    UserBaseModeluser = 
-        ////}
-        //// GET: /User/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    User user = db.Users.Find(id);
-        //    if (user == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(user);
-        //}
+        /// GET api/User/getuser/5
+        /// <summary>
+        /// returns the specified user based on ID
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [System.Web.Http.ActionName("GetUser")]
+        [ResponseType(typeof(UserBaseModel))]
+        public IHttpActionResult GetUser(int userId)
+        {
+            if (!IsStoreAdmin())
+            {
+                return Unauthorized();
+            }
 
-        //// GET: /User/Create
-        //public ActionResult Create()
-        //{
-        //    ViewBag.RoleId = new SelectList(db.Roles, "RoleId", "RoleName");
-        //    return View();
-        //}
+            UserBaseModel user = _modelFactory.Create(_repo.GetUserById(userId));
 
-        //// POST: /User/Create
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include="UserId,EmailAddress,Password,ApiKey,RoleId")] User user)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        user.ApiKey = GetApiKey();
-        //        db.Users.Add(user);
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
 
-        //    ViewBag.RoleId = new SelectList(db.Roles, "RoleId", "RoleName", user.RoleId);
-        //    return View(user);
-        //}
+        //// POST: /User/PostUser
+        [System.Web.Http.HttpPost]
+        [RoleAuthentication("StoreAdmin")]
+        [ValidateAntiForgeryToken]
+        [ResponseType(typeof(User))]
+        [System.Web.Http.ActionName("PostUser")]
+        public IHttpActionResult PostUser([FromBody] User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //// GET: /User/Edit/5
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    User user = db.Users.Find(id);
-        //    if (user == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    ViewBag.RoleId = new SelectList(db.Roles, "RoleId", "RoleName", user.RoleId);
-        //    return View(user);
-        //}
+            user.ApiKey = GetApiKey();
+            string hashedPassword = Crypto.HashPassword(user.Password);
+            user.Password = hashedPassword;
+            db.Users.Add(user);
+            db.SaveChanges();
 
-        //// POST: /User/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include="UserId,EmailAddress,Password,ApiKey,RoleId")] User user)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(user).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    ViewBag.RoleId = new SelectList(db.Roles, "RoleId", "RoleName", user.RoleId);
-        //    return View(user);
-        //}
+            return CreatedAtRoute("DefaultApi", new { id = user.UserId }, user);
+        }
 
-        //// GET: /User/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    User user = db.Users.Find(id);
-        //    if (user == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(user);
-        //}
 
-        //// POST: /User/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    User user = db.Users.Find(id);
-        //    db.Users.Remove(user);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+        // PUT: api/User/PutUser
+        [RoleAuthentication("StoreAdmin")]
+        [ResponseType(typeof(User))]
+        [System.Web.Http.ActionName("PutUser")]
+        public IHttpActionResult PutUser(int id, [FromBody] User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
+            if (id != user.UserId)
+            {
+                return BadRequest();
+            }
+
+            var checkUserInDb = db.Users.FirstOrDefault(u => u.UserId == id);   // check if the user exists
+            if (checkUserInDb == null)
+            {
+                return NotFound();
+            }
+
+            //// remove from role
+            //if (user.Role != null)
+            //{
+            //    var roleToBeRemovedFrom = Enum.GetName(typeof(Role), user.Role);
+            //    if(roleToBeRemovedFrom==null || !roleToBeRemovedFrom.Contains(checkUserInDb){
+            //        return BadRequest();
+            //    }
+            //    else
+            //    {
+            //        roleToBeRemovedFrom.Remove(checkUserInDb);
+            //    }
+            //}
+
+            //// add role
+            //if(user.Role ! =null)
+            //{
+            //    var roleToBeAdded = Enum.GetName
+            //}
+
+            if (user.FirstName != null)
+            {
+                checkUserInDb.FirstName = user.FirstName;
+            }
+            if (user.LastName != null)
+            {
+                checkUserInDb.LastName = user.LastName; 
+            }
+            if (user.EmailAddress != null)
+            {
+                checkUserInDb.EmailAddress = user.EmailAddress;
+            }
+
+            db.Entry(checkUserInDb).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        private bool UserExists(int id)
+        {
+            return db.Users.Count(e => e.UserId == id) > 0;
+        }
+
+        [System.Web.Http.ActionName("DeleteUser")]
+        // DELETE: api/User/DeleteUser
+        [ResponseType(typeof(User))]
+        public IHttpActionResult DeleteUser(int userId)
+        {
+            User user = db.Users.Find(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            db.Users.Remove(user);
+            db.SaveChanges();
+
+            return Ok(user);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         public static string GetApiKey()
         {
@@ -174,5 +212,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 return Convert.ToBase64String(bytes);
             }
         }
+
+        
     }
 }
