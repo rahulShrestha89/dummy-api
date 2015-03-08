@@ -1,0 +1,64 @@
+﻿
+@model dynamic
+
+@{
+    ViewBag.Title = "Log In ";
+}
+
+<h2>Welcome to The Usual Suspects Store</h2>
+
+@using(Html.BeginfForm())
+{
+    <div class="control-group">
+        <label class="control-label" for="inputEmail">Email</label>
+        <div class="controls">
+            <input type="text" id="email-input" placeholder="Email">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="inputPassword">Password</label>
+        <div class="controls">
+            <input type="password" id="password-input" placeholder="Password">
+        </div>
+    </div>
+    <br />
+    <div class="control-group">
+        <div class="controls">
+            <button id="submit-button" type="submit" class="btn">LogIn</button>
+        </div>
+    </div>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function () {
+
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '/API/ApiKey/',
+                    type: "GET",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('x_cmps383_authentication_email', $('#email-input').val());
+                        xhr.setRequestHeader('x_cmps383_authentication_password', $('#password-input').val());
+                    },
+                    success: function (result) {
+                        $.cookie('ApiKey', result.ApiKey);
+                        $.cookie('UserId', result.UserId);
+                        alert($.cookie('ApiKey'));
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.status == 417) {
+                            alert("All fields are required");
+                        }
+                        if (jqXHR.status == 401) {
+                            alert("Invalid username or password");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

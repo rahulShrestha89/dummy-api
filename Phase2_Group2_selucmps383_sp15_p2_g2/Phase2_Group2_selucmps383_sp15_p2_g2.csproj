@@ -242,6 +242,7 @@
     <Compile Include="Areas\API\Controllers\UserController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\LogInController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DbContext\GameStoreContext.cs" />
     <Compile Include="Entities\Cart.cs" />
@@ -370,6 +371,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
+    <Content Include="Views\LogIn\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
