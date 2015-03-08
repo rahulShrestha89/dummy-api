@@ -10,7 +10,6 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Owin.Security.Cookies;
 
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.App_Start

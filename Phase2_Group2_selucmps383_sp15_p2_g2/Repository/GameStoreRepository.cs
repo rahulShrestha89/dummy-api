@@ -125,6 +125,10 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             return _context.Sales.Find(saleId);
         }
 
+        /// <summary>
+        /// Adds a sale to the database.
+        /// </summary>
+        /// <param name="sale"></param>
         public void AddSale(Sale sale)
         {
             _context.Sales.Add(sale);
