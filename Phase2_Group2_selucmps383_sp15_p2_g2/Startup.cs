@@ -7,7 +7,7 @@ using Owin;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2
 {
-    public class Startup
+    public partial class Startup
     {
         public void Configuration(IAppBuilder app)
         {
