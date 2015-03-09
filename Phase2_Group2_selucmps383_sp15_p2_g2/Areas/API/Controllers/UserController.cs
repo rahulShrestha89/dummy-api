@@ -125,23 +125,26 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             }
 
             //// remove from role
-            //if (user.Role != null)
-            //{
-            //    var roleToBeRemovedFrom = Enum.GetName(typeof(Role), user.Role);
-            //    if(roleToBeRemovedFrom==null || !roleToBeRemovedFrom.Contains(checkUserInDb){
-            //        return BadRequest();
-            //    }
-            //    else
-            //    {
-            //        roleToBeRemovedFrom.Remove(checkUserInDb);
-            //    }
-            //}
+            /*
+            if (user.Role != null)
+            {
+                var roleToBeRemovedFrom = Enum.GetName(typeof(Role), user.Role);
+                if(roleToBeRemovedFrom==null || !roleToBeRemovedFrom.Contains(Enum.GetName(typeof(Role), checkUserInDb.Role)))
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                   checkUserInDb.Role.
+                }
+            }*/
 
             //// add role
-            //if(user.Role ! =null)
-            //{
-            //    var roleToBeAdded = Enum.GetName
-            //}
+            if(user.Role != null)
+            {
+                //var roleToBeAdded = Enum.GetName(typeof(Role), user.Role);
+                checkUserInDb.Role = user.Role;
+            }
 
             if (user.FirstName != null)
             {
