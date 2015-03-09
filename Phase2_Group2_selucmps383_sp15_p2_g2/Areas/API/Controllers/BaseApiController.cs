@@ -31,9 +31,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         public BaseApiController(IGameStoreRepository repo)
         {
             _repo = repo;
-           
-            string h1 = Request.Headers.ElementAt(0).ToString();
-            string h2 = Request.Headers.ElementAt(1).ToString();
+
+            string h1 = Request.Headers.Where(s => s.Key == "xcmps383authenticationid").FirstOrDefault().Value.ToString();
+            string h2 = Request.Headers.Where(s => s.Key == "xcmps383authenticationkey").FirstOrDefault().Value.ToString();
 
             storeUser = _db.Users.Where(s => s.EmailAddress == h1 && s.ApiKey == h2).FirstOrDefault();
         }
