@@ -172,7 +172,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             _context.Users.Add(user);
         }
 
-        public void UpdateUser(int id, User checkUserInDb)
+        public void UpdateUser(User checkUserInDb)
        {
            _context.Entry(checkUserInDb).State = EntityState.Modified;
        }

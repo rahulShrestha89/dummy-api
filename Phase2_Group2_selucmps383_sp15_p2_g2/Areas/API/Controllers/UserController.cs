@@ -106,26 +106,27 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         [RoleAuthentication("StoreAdmin")]
         [ResponseType(typeof(User))]
         [System.Web.Http.ActionName("PutUser")]
-        public IHttpActionResult PutUser(int id, [FromBody] User user)
+        public IHttpActionResult PutUser(int userId, [FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != user.UserId)
+            if (userId != user.UserId)
             {
                 return BadRequest();
             }
 
-            var checkUserInDb = _repo.GetUserById(id);   // check if the user exists
+            var checkUserInDb = _repo.GetUserById(userId);   // check if the user exists
+
             if (checkUserInDb == null)
             {
                 return NotFound();
             }
 
-            //// remove from role
-            /*
+            //// remove from role 
+            /* Not sure if this is needed anymore.
             if (user.Role != null)
             {
                 var roleToBeRemovedFrom = Enum.GetName(typeof(Role), user.Role);
@@ -140,7 +141,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             }*/
 
             //// add role
-            if(user.Role != null)
+            if(user.Role != checkUserInDb.Role)
             {
                 //var roleToBeAdded = Enum.GetName(typeof(Role), user.Role);
                 checkUserInDb.Role = user.Role;
@@ -159,7 +160,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 checkUserInDb.EmailAddress = user.EmailAddress;
             }
 
-            _repo.UpdateUser(id, checkUserInDb);
+            _repo.UpdateUser(checkUserInDb);
 
             try
             {
@@ -174,7 +175,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!UserExists(userId))
                 {
                     return NotFound();
                 }
