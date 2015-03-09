@@ -24,7 +24,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         IQueryable<User> GetAllUsers();
         User GetUserById(int userId);
         void AddUser(User user);
-        User UpdateUser(User checkUserInDb);
+        void UpdateUser(User checkUserInDb);
 
         // for api/sale controllers
         IQueryable<Sale> GetAllSales();
