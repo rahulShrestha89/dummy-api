@@ -50,13 +50,13 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
         }
 
         /// <summary>
-        /// Finds user by their id.
+        /// Finds game by id.
         /// </summary>
         /// <param name="gameId"></param>
         /// <returns>Returns the game with the specified Id.</returns>
         public Game GetGame(int gameId)
         {
-            return _context.Games.Find(gameId);
+            return _context.Games.Where(g => g.GameId == gameId).FirstOrDefault();
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
         /// <returns>Returns the found sale.</returns>
         public Sale GetSaleById(int saleId)
         {
-            return _context.Sales.Find(saleId);
+            return _context.Sales.Where(s => s.SaleId == saleId).FirstOrDefault();
         }
 
         /// <summary>
@@ -172,6 +172,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             _context.Users.Add(user);
         }
 
+        //Want to check this before adding intellisense comments.
         public void UpdateUser(User checkUserInDb)
        {
            _context.Entry(checkUserInDb).State = EntityState.Modified;

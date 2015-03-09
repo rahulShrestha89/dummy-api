@@ -49,6 +49,18 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
            
         }
 
+        public GameModel Create(Game game)
+        {
+            return new GameModel()
+            {
+                GameId = game.GameId,
+                GamePrice = game.GamePrice,
+                GameName = game.GameName,
+                ReleaseDate = game.ReleaseDate,
+                InventoryCount = game.InventoryCount
+            };
+        }
+
         public UserBaseModel CreateUserSummary(User user)
         {
             return new UserBaseModel()

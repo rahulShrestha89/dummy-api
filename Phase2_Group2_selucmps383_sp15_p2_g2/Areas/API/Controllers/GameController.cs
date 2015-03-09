@@ -12,19 +12,35 @@ using System.Data.Entity.Infrastructure;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
-    public class GameController : ApiController
+    public class GameController : BaseApiController
     {
+        IGameStoreRepository _repo;
+        ModelFactory _modelFactory;
+
         public GameStoreContext _db = new GameStoreContext(); 
 
-        public IQueryable<Game> GetAll()
+        public GameController()
         {
-            return _db.Games;
+
         }
 
-        [ResponseType(typeof(Game))]
-        public IHttpActionResult GetGame(int id)
+        public GameController(IGameStoreRepository repo)
         {
-            Game game = _db.Games.Find(id);
+            _repo = repo;
+            _modelFactory = new ModelFactory();
+        }
+
+        [System.Web.Http.ActionName("GetAllGames")]
+        public IQueryable<GameModel> GetAll()
+        {
+            return _repo.GetAllGames().Select(g => _modelFactory.Create(g));
+        }
+
+        [System.Web.Http.ActionName("GetGame")]
+        [ResponseType(typeof(GameModel))]
+        public IHttpActionResult GetGame(int gameId)
+        {
+            GameModel game = _modelFactory.Create(_repo.GetGame(gameId));
             if(game == null)
             {
                 return NotFound();

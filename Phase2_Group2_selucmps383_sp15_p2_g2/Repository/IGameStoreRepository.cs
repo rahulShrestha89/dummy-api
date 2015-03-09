@@ -8,6 +8,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 {
     public interface IGameStoreRepository
     {
+        // for api/game controllers
         IQueryable<Game> GetAllGames();
         Game GetGame(int gameId);
         bool GameExists(int gameId);
