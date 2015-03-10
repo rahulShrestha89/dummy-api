@@ -20,10 +20,13 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 
         IQueryable<Game> GetGamesByGenre(int genreId);
 
+        //for api/genre controllers
         IQueryable<Genre> GetAllGenres();
         Genre GetGenre(int genreId);    // if necessary use bool to check whether a genre belongs to any game
         bool GenreExists(int genreId);
         Genre GetGenre(string genreName);
+        void UpdateGenre(Genre genreInDb);
+        void AddGenre(Genre genre);
 
         // for  api/user controllers
         IQueryable<User> GetAllUsers();
@@ -35,11 +38,27 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
 
         // for api/sale controllers
         IQueryable<Sale> GetAllSales();
-        Sale GetSaleById(int saleId);
+        Sale GetSale(int saleId);
         void AddSale(Sale sale);
         void RemoveSale(Sale sale);
         void UpdateSale(Sale saleInDb);
         bool SaleExists(int saleId);
+
+        //for api/tag controllers
+        IQueryable<Tag> GetAllTags();
+        Tag GetTag(int tagId);
+        void AddTag(Tag tag);
+        void RemoveTag(Tag tag);
+        void UpdateTag(Tag tagInDb);
+        bool TagExists(int tagId);
+
+        //for api/cart controllers
+        IQueryable<Cart> GetAllCarts();
+        Cart GetCart(int cartId);
+        void AddCart(Cart cart);
+        void RemoveCart(Cart cart);
+        void UpdateCart(Cart cartInDb);
+        bool CartExists(Cart cartId);
 
         bool IsAuthorizedUser(string emailAddress, string password);
 

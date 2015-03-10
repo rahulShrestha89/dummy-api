@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
-using System.Web.Http.Description;
-using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using Phase2_Group2_selucmps383_sp15_p2_g2.Authentication;
+using System.Web;
 using System.Web.Mvc;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
+using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
+using System.Security.Cryptography;
+using System.Web.Http;
+using System.Web.Http.Description;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Controllers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Authentication;
+using System.Web.Helpers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
+using System.Data.Entity.Infrastructure;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
@@ -33,12 +38,11 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         }
 
         [System.Web.Http.ActionName("GetAllGames")]
-        public IQueryable<GameModel> GetAll()
+        public IQueryable<GameModel> GetAllGames()
         {
             return _repo.GetAllGames().Select(g => _modelFactory.Create(g));
         }
        
-
         [System.Web.Http.ActionName("GetGame")]
         [ResponseType(typeof(GameModel))]
         public IHttpActionResult GetGame(int gameId)
@@ -62,7 +66,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         [System.Web.Http.HttpPost]
         [RoleAuthentication("StoreAdmin")]
         [ValidateAntiForgeryToken]
-        [ResponseType(typeof(Game))]
         [System.Web.Http.ActionName("PostGame")]
         [ResponseType(typeof(Game))]
         public IHttpActionResult PostGame(Game game)
@@ -110,12 +113,12 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 gameInDb.ReleaseDate = game.ReleaseDate;
             }
 
-            if(game.GamePrice != null)
+            if(game.GamePrice != gameInDb.GamePrice)
             {
                 gameInDb.GamePrice = game.GamePrice;
             }
 
-            if(game.InventoryCount != null)
+            if(game.InventoryCount != gameInDb.GamePrice)
             {
                 gameInDb.InventoryCount = game.InventoryCount;
             }
@@ -134,6 +137,10 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 {
                     if(!gameInDb.Genres.Contains(g)) //check if the item is not in the collection of genres
                     {
+                        if(!_repo.GenreExists(g.GenreId))
+                        {
+                            _repo.AddGenre(g);
+                        }
                         gameInDb.Genres.Add(g); //if not add it to the collection.
                     }
                 }
@@ -145,6 +152,10 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 {
                     if (!gameInDb.Tags.Contains(t)) //check if the item is not in the collection of tags.
                     {
+                        if(!_repo.TagExists(t.TagId))
+                        {
+                            _repo.AddTag(t);
+                        }
                         gameInDb.Tags.Add(t); //if not add it to the collection.
                     }
                 }
@@ -180,10 +191,12 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 
         }
 
+        [RoleAuthentication("StoreAdmin")]
         [ResponseType(typeof(Game))]
-        public IHttpActionResult Delete(int id)
+        [System.Web.Http.ActionName("DeleteGame")]
+        public IHttpActionResult DeleteGame(int gameId)
         {
-            Game game = _db.Games.Find(id);
+            Game game = _repo.GetGame(gameId);
             if(game != null)
             {
                 _repo.RemoveGame(game);
@@ -193,16 +206,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             return NotFound();
 
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         
     }
 }

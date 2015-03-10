@@ -2,32 +2,54 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web;
+using System.Web.Mvc;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
+using System.Security.Cryptography;
+using System.Web.Http;
+using System.Web.Http.Description;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Controllers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Authentication;
+using System.Web.Helpers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
+using System.Data.Entity.Infrastructure;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
     public class GenreController : ApiController
     {
-        private GameStoreContext db = new GameStoreContext();
+        IGameStoreRepository _repo;
+        ModelFactory _modelFactory;
+
+        public GameStoreContext db = new GameStoreContext(); 
+
+        public GenreController()
+        {
+
+        }
+
+        public GenreController(IGameStoreRepository repo)
+        {
+            _repo = repo;
+            _modelFactory = new ModelFactory();
+        }
 
         // GET api/Genre
-        public IQueryable<Genre> GetGenres()
+        [System.Web.Http.ActionName("GetAllGenres")]
+        public IQueryable<Genre> GetAllGenres()
         {
-            return db.Genres;
+            return _repo.GetAllGenres();
         }
 
         // GET api/Genre/5
+        [System.Web.Http.ActionName("GetGenre")]
         [ResponseType(typeof(Genre))]
-        public IHttpActionResult GetGenre(int id)
+        public IHttpActionResult GetGenre(int genreId)
         {
-            Genre genre = db.Genres.Find(id);
+            Genre genre = _repo.GetGenre(genreId);
             if (genre == null)
             {
                 return NotFound();
@@ -37,27 +59,61 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         }
 
         // PUT api/Genre/5
-        public IHttpActionResult PutGenre(int id, Genre genre)
+        [System.Web.Http.ActionName("PutGenre")]
+        [RoleAuthentication("StoreAdmin")]
+        [ResponseType(typeof(Genre))]
+        public IHttpActionResult PutGenre(int genreId, Genre genre)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != genre.GenreId)
+            if (genreId != genre.GenreId)
             {
                 return BadRequest();
             }
 
-            db.Entry(genre).State = EntityState.Modified;
+            var genreInDb = _repo.GetGenre(genreId);
+
+            if(genre.GenreName != null)
+            {
+                genreInDb.GenreName = genre.GenreName;
+            }
+
+            var gamesToCheck = genre.Games;
+
+            if(gamesToCheck != null)
+            {
+                foreach(var g in gamesToCheck)
+                {
+                    if(!genreInDb.Games.Contains(g))
+                    {
+                        if (!_repo.GameExists(g.GameId))
+                        {
+                            _repo.AddGame(g);
+                        }
+                        genreInDb.Games.Add(g);
+                    }
+                }
+            }
+
+            _repo.UpdateGenre(genreInDb);
 
             try
             {
-                db.SaveChanges();
+               if(_repo.SaveAll())
+               {
+                   return StatusCode(HttpStatusCode.NoContent);
+               }
+               else
+               {
+                   return BadRequest();
+               }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GenreExists(id))
+                if (!_repo.GenreExists(genreId))
                 {
                     return NotFound();
                 }
@@ -66,8 +122,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                     throw;
                 }
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST api/Genre
@@ -101,18 +155,5 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             return Ok(genre);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool GenreExists(int id)
-        {
-            return db.Genres.Count(e => e.GenreId == id) > 0;
-        }
     }
 }

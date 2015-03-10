@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web;
+using System.Web.Mvc;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
+using System.Security.Cryptography;
+using System.Web.Http;
+using System.Web.Http.Description;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Controllers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Authentication;
+using System.Web.Helpers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
+using System.Data.Entity.Infrastructure;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
