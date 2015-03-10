@@ -11,7 +11,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2
     {
         public void Configuration(IAppBuilder app)
         {
-            Configuration(app);
+            ConfigureAuth(app);
         }
     }
 }

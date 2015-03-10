@@ -10,9 +10,12 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security;
 using System.Collections.Generic;
 using System.Linq;
+using WebApiContrib.IoC.Ninject;
+using System.Web.Http;
+using Phase2_Group2_selucmps383_sp15_p2_g2.App_Start;
 
 
-namespace Phase2_Group2_selucmps383_sp15_p2_g2.App_Start
+namespace Phase2_Group2_selucmps383_sp15_p2_g2
 {
     public partial class Startup
     {
@@ -38,14 +41,24 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.App_Start
 
         }
 
-        public void Configuration(IAppBuilder app)
+        public void ConfigureAuth(IAppBuilder app)
         {
+            var config = new HttpConfiguration();
+            config.DependencyResolver = new NinjectResolver(NinjectWebCommon.CreateKernel());
+
+            config.Routes.MapHttpRoute("default", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+
+            app.UseWebApi(config);
+
+
+
+
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             app.UseOAuthBearerTokens(OAuthOptions);
-            Configuration(app);
+            ConfigureAuth(app);
         }
     }
 }
