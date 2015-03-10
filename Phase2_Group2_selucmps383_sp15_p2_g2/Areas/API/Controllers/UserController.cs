@@ -177,12 +177,14 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             return db.Users.Count(e => e.UserId == id) > 0;
         }
 
-        [System.Web.Http.ActionName("DeleteUser")]
+       
         // DELETE: api/User/DeleteUser
+        [RoleAuthentication("StoreAdmin")]
         [ResponseType(typeof(User))]
+        [System.Web.Http.ActionName("DeleteUser")]
         public IHttpActionResult DeleteUser(int userId)
         {
-            User user = db.Users.Find(userId);
+            User user = _repo.GetUserById(userId);
             if (user == null)
             {
                 return NotFound();
@@ -192,15 +194,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             _repo.SaveAll();
 
             return Ok(user);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         public static string GetApiKey()

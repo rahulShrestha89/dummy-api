@@ -2,32 +2,55 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web;
+using System.Web.Mvc;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Models;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
+using System.Security.Cryptography;
+using System.Web.Http;
+using System.Web.Http.Description;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Controllers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Authentication;
+using System.Web.Helpers;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
+using System.Data.Entity.Infrastructure;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
-    public class TagController : ApiController
+    public class TagController : BaseApiController
     {
-        private GameStoreContext db = new GameStoreContext();
+        IGameStoreRepository _repo;
+        ModelFactory _modelFactory;
+
+        public GameStoreContext db = new GameStoreContext(); 
+
+        public TagController()
+        {
+
+        }
+
+        public TagController(IGameStoreRepository repo)
+        {
+            _repo = repo;
+            _modelFactory = new ModelFactory();
+        }
+       
 
         // GET api/Tag
-        public IQueryable<Tag> GetTags()
+        [System.Web.Http.ActionName("GetAllTags")]
+        public IQueryable<Tag> GetAllTags()
         {
-            return db.Tags;
+            return _repo.GetAllTags();
         }
 
         // GET api/Tag/5
+        [System.Web.Http.ActionName("GetTag")]
         [ResponseType(typeof(Tag))]
-        public IHttpActionResult GetTag(int id)
+        public IHttpActionResult GetTag(int tagId)
         {
-            Tag tag = db.Tags.Find(id);
+            Tag tag = _repo.GetTag(tagId);
             if (tag == null)
             {
                 return NotFound();
@@ -37,27 +60,61 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         }
 
         // PUT api/Tag/5
-        public IHttpActionResult PutTag(int id, Tag tag)
+        [RoleAuthentication("StoreAdmin")]
+        [ResponseType(typeof(Tag))]
+        [System.Web.Http.ActionName("PutTag")]
+        public IHttpActionResult PutTag(int tagId, Tag tag)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != tag.TagId)
+            if (tagId != tag.TagId)
             {
                 return BadRequest();
             }
 
-            db.Entry(tag).State = EntityState.Modified;
+            var tagInDb = _repo.GetTag(tagId);
+            var gamesToCheck = tag.Games;
+
+            if(tag.TagName != null)
+            {
+                tagInDb.TagName = tag.TagName;
+            }
+
+            if(gamesToCheck != null)
+            {
+                foreach (var g in gamesToCheck)
+                {
+                    if(!tagInDb.Games.Contains(g))
+                    {
+                        if(!_repo.GameExists(g.GameId))
+                        {
+                            _repo.AddGame(g);
+                        }
+                        tagInDb.Games.Add(g);
+                    }
+                }
+            }
+
+
+            _repo.UpdateTag(tagInDb);
 
             try
             {
-                db.SaveChanges();
+                if(_repo.SaveAll())
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TagExists(id))
+                if (!_repo.TagExists(tagId))
                 {
                     return NotFound();
                 }
@@ -66,11 +123,13 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                     throw;
                 }
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST api/Tag
+        [System.Web.Http.HttpPost]
+        [RoleAuthentication("StoreAdmin")]
+        [ValidateAntiForgeryToken]
+        [System.Web.Http.ActionName("PostTag")]
         [ResponseType(typeof(Tag))]
         public IHttpActionResult PostTag(Tag tag)
         {
@@ -79,40 +138,35 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Tags.Add(tag);
-            db.SaveChanges();
+            _repo.AddTag(tag);
+            _repo.SaveAll();
 
             return CreatedAtRoute("DefaultApi", new { id = tag.TagId }, tag);
         }
 
         // DELETE api/Tag/5
+        [RoleAuthentication("StoreAdmin")]
         [ResponseType(typeof(Tag))]
-        public IHttpActionResult DeleteTag(int id)
+        [System.Web.Http.ActionName("DeleteTag")]
+        public IHttpActionResult DeleteTag(int tagId)
         {
-            Tag tag = db.Tags.Find(id);
+            Tag tag = _repo.GetTag(tagId);
             if (tag == null)
             {
                 return NotFound();
             }
 
-            db.Tags.Remove(tag);
-            db.SaveChanges();
+            var gamesWithTag = tag.Games;
+
+            foreach(var g in gamesWithTag)
+            {
+                g.Tags.Remove(tag);
+            }
+
+            _repo.RemoveTag(tag);
+            _repo.SaveAll();
 
             return Ok(tag);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool TagExists(int id)
-        {
-            return db.Tags.Count(e => e.TagId == id) > 0;
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             {
                 return Unauthorized();
             }
-            SaleModel sale = _modelFactory.Create(_repo.GetSaleById(saleId));
+            SaleModel sale = _modelFactory.Create(_repo.GetSale(saleId));
 
             if(sale == null)
             {
@@ -64,7 +64,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         }
 
         [System.Web.Http.HttpPost]
-        [RoleAuthentication("StoreAdmin , Employee")]
+        [RoleAuthentication("StoreAdmin , StoreEmployee")]
         [ValidateAntiForgeryToken]
         [ResponseType(typeof(Sale))]
         [System.Web.Http.ActionName("PostSale")]
@@ -98,7 +98,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 return BadRequest();
             }
 
-            var saleInDb = _repo.GetSaleById(saleId);
+            var saleInDb = _repo.GetSale(saleId);
 
             if(sale.SaleDate != null)
             {
@@ -149,7 +149,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         [ResponseType(typeof(Sale))]
         public IHttpActionResult DeleteSale(int saleId)
         {
-            Sale sale = _repo.GetSaleById(saleId);
+            Sale sale = _repo.GetSale(saleId);
             if(sale == null)
             {
                 return NotFound();

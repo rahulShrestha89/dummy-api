@@ -20,6 +20,10 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             _context = context;
         }
 
+        /*
+         * Users Methods
+         */
+        #region
         /// <summary>
         /// return all users
         /// </summary>
@@ -48,6 +52,45 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             _context.Users.Remove(user);
         }
 
+        public bool UserExists(int userId)
+        {
+            return _context.Users.Count(u => u.UserId == userId) > 0;
+        }
+
+        public bool IsAuthorizedUser(string emailAddress, string password)
+        {
+            var user = _context.Users.Where(u => u.EmailAddress == emailAddress).FirstOrDefault();
+
+            if (user != null)
+            {
+                if (Crypto.VerifyHashedPassword(user.Password, password))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Add a new user to the db.
+        /// </summary>
+        /// <param name="user"></param>
+        public void AddUser(User user)
+        {
+            _context.Users.Add(user);
+        }
+
+        //Want to check this before adding intellisense comments.
+        public void UpdateUser(User checkUserInDb)
+        {
+            _context.Entry(checkUserInDb).State = EntityState.Modified;
+        }
+        #endregion 
+
+        /*
+         * Game Methods
+         */
+        #region
         /// <summary>
         /// Lists all games.
         /// </summary>
@@ -82,6 +125,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             _context.Games.Add(game);
         }
 
+
         /// <summary>
         /// Find game by genre
         /// </summary>
@@ -98,41 +142,27 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             return _context.Games.Count(e => e.GameId == gameId) > 0;
         }
 
-        public bool UserExists(int userId)
+        /// <summary>
+        /// Removes a game from the db.
+        /// </summary>
+        /// <param name="game"></param>
+        public void RemoveGame(Game game)
         {
-            return _context.Users.Count(u => u.UserId == userId) >0;
+            _context.Games.Remove(game);
         }
+
+        public Game GetGame(string gameName)
+        {
+            return _context.Games.Where(g => g.GameName.Equals(gameName)).FirstOrDefault();
+        }
+        #endregion
         
-        /// <summary>
-        /// Get all genres
-        /// </summary>
-        /// <returns></returns>
-        public IQueryable<Genre> GetAllGenres()
-        {
-            return _context.Genres
-                .AsQueryable();
-        }
+       
 
-        /// <summary>
-        /// Get genre by Id
-        /// </summary>
-        /// <param name="genreId"></param>
-        /// <returns></returns>
-        public Genre GetGenre(int genreId)
-        {
-            return _context.Genres.Find(genreId);
-        }
-
-        /// <summary>
-        /// Get Genre by GameId
-        /// </summary>
-        /// <param name="gameId"></param>
-        /// <returns></returns>
-        public IQueryable<Genre> GetGenresByGame(int gameId)
-        { 
-            return _context.Genres 
-                    .Where(u => u.Games.Any(e => e.GameId== gameId));
-        }
+        /*
+         * Sale Methods
+         */
+        #region
 
         /// <summary>
         /// Lists all sales.
@@ -148,7 +178,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
         /// </summary>
         /// <param name="saleId"></param>
         /// <returns>Returns the found sale.</returns>
-        public Sale GetSaleById(int saleId)
+        public Sale GetSale(int saleId)
         {
             return _context.Sales.Where(s => s.SaleId == saleId).FirstOrDefault();
         }
@@ -171,15 +201,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             _context.Sales.Remove(sale);
         }
 
-        /// <summary>
-        /// Removes a game from the db.
-        /// </summary>
-        /// <param name="game"></param>
-        public void RemoveGame(Game game)
-        {
-            _context.Games.Remove(game);
-        }
-
         public void UpdateSale(Sale saleInDb)
         {
             _context.Entry(saleInDb).State = EntityState.Modified;
@@ -189,46 +210,140 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
         {
             return _context.Sales.Count(s => s.SaleId == saleId) > 0;
         }
+        #endregion
 
-        public bool GenreExists(int genreId)
-        {
-            return _context.Games.Count(e => e.GameId == genreId) > 0;
-        }
-
-        public bool IsAuthorizedUser(string emailAddress, string password)
-        {
-            var user = _context.Users.Where(u => u.EmailAddress == emailAddress).FirstOrDefault();
-
-            if (user != null)
-            {
-                if (Crypto.VerifyHashedPassword(user.Password, password))
-                {
-                    return true;
-                }   
-            }
-            return false;
-        }
-        
+        /*
+         * Genre Methods
+         */
+        #region
         /// <summary>
-        /// Add a new user to the db.
+        /// Get all genres
         /// </summary>
-        /// <param name="user"></param>
-       public void AddUser(User user)
+        /// <returns></returns>
+        public IQueryable<Genre> GetAllGenres()
         {
-            _context.Users.Add(user);
+            return _context.Genres
+                .AsQueryable();
         }
 
-        //Want to check this before adding intellisense comments.
-        public void UpdateUser(User checkUserInDb)
-       {
-           _context.Entry(checkUserInDb).State = EntityState.Modified;
-       }
+        public void AddGenre(Genre genre)
+        {
+            _context.Genres.Add(genre);
+        }
 
         public Genre GetGenre(string genreName)
         {
             return _context.Genres.Where(g => g.GenreName.Equals(genreName)).FirstOrDefault();
         }
 
+        public bool GenreExists(int genreId)
+        {
+            return _context.Games.Count(e => e.GameId == genreId) > 0;
+        }
+
+        /// <summary>
+        /// Get Genre by GameId
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        public IQueryable<Genre> GetGenresByGame(int gameId)
+        {
+            return _context.Genres
+                    .Where(u => u.Games.Any(e => e.GameId == gameId));
+        }
+
+        /// <summary>
+        /// Get genre by Id
+        /// </summary>
+        /// <param name="genreId"></param>
+        /// <returns></returns>
+        public Genre GetGenre(int genreId)
+        {
+            return _context.Genres.Find(genreId);
+        }
+
+        public void UpdateGenre(Genre genreInDb)
+        {
+            _context.Entry(genreInDb).State = EntityState.Modified;
+        }
+        #endregion
+
+        /*
+         * Tag Methods
+         */
+        #region
+        public IQueryable<Tag> GetAllTags()
+        {
+            return _context.Tags
+                .AsQueryable();
+        }
+
+        public void AddTag(Tag tag)
+        {
+            _context.Tags.Add(tag);
+        }
+
+        public bool TagExists(int tagId)
+        {
+            return _context.Tags.Count(s => s.TagId == tagId) > 0;
+        }
+
+        public Tag GetTag(int tagId)
+        {
+            return _context.Tags.Where(s => s.TagId == tagId).FirstOrDefault();
+        }
+
+        public void RemoveTag(Tag tag)
+        {
+            _context.Tags.Remove(tag);
+        }
+
+        public void UpdateTag(Tag tagInDb)
+        {
+            _context.Entry(tagInDb).State = EntityState.Modified;
+        }
+        #endregion
+
+        /*
+         * Cart Methods
+         */ 
+        #region
+        public IQueryable<Cart> GetAllCarts()
+        {
+            return _context.Carts
+                .AsQueryable();
+        }
+
+        public void AddCart(Cart cart)
+        {
+            _context.Carts.Add(cart);
+        }
+
+        public bool CartExists(int cartId)
+        {
+            return _context.Carts.Count(s => s.CartId == cartId) > 0;
+        }
+
+        public Cart GetCart(int cartId)
+        {
+            return _context.Carts.Where(s => s.CartId == cartId).FirstOrDefault();
+        }
+
+        public void RemoveCart(Cart cart)
+        {
+            _context.Carts.Remove(cart);
+        }
+
+        public void UpdateCart(Cart cartInDb)
+        {
+            _context.Entry(cartInDb).State = EntityState.Modified;
+        }
+        #endregion
+
+        /*
+         * Misc. Methods
+         */
+        #region
         public void Dispose(bool disposing)
         {
             if (disposing)
@@ -252,6 +367,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
         {
             return _context.SaveChanges() > 0;
         }
-
+        #endregion
     }
 }
