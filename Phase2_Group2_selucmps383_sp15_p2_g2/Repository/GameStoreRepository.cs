@@ -150,6 +150,11 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
         {
             _context.Games.Remove(game);
         }
+
+        public Game GetGame(string gameName)
+        {
+            return _context.Games.Where(g => g.GameName.Equals(gameName)).FirstOrDefault();
+        }
         #endregion
         
        
@@ -299,6 +304,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
         }
         #endregion
 
+        /*
+         * Cart Methods
+         */ 
         #region
         public IQueryable<Cart> GetAllCarts()
         {

@@ -15,6 +15,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         void UpdateGame(Game gamInDb);
         bool GameExists(int gameId);
         void RemoveGame(Game game);
+        Game GetGame(string gameName);
 
         IQueryable<Genre> GetGenresByGame(int gameId);
 
@@ -58,7 +59,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         void AddCart(Cart cart);
         void RemoveCart(Cart cart);
         void UpdateCart(Cart cartInDb);
-        bool CartExists(Cart cartId);
+        bool CartExists(int cartId);
 
         bool IsAuthorizedUser(string emailAddress, string password);
 

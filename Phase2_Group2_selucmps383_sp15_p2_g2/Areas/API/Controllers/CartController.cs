@@ -16,24 +16,47 @@ using Phase2_Group2_selucmps383_sp15_p2_g2.Authentication;
 using System.Web.Helpers;
 using Phase2_Group2_selucmps383_sp15_p2_g2.Enums;
 using System.Data.Entity.Infrastructure;
+using System.Threading.Tasks;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
-    public class CartController : ApiController
+    public class CartController : BaseApiController
     {
-        private GameStoreContext db = new GameStoreContext();
+        IGameStoreRepository _repo;
+        ModelFactory _modelFactory;
+
+        public GameStoreContext db = new GameStoreContext(); 
+
+        public CartController()
+        {
+
+        }
+
+        
+        public CartController(IGameStoreRepository repo)
+        {
+            _repo = repo;
+            _modelFactory = new ModelFactory();
+        }
 
         // GET api/Cart
-        public IQueryable<Cart> GetCarts()
+        [System.Web.Http.ActionName("GetAllCarts")]
+        public IQueryable<Cart> GetAllCarts()
         {
-            return db.Carts;
+            return _repo.GetAllCarts();
         }
 
         // GET api/Cart/5
+        [System.Web.Http.ActionName("GetCart")]
         [ResponseType(typeof(Cart))]
-        public async Task<IHttpActionResult> GetCart(int id)
+        public IHttpActionResult GetCart(int cartId)
         {
-            Cart cart = await db.Carts.FindAsync(id);
+            if(!IsEmployee() || storeUser.CustomerCart.CartId != cartId)
+            {
+                return Unauthorized();
+            }
+
+            Cart cart = _repo.GetCart(cartId);
             if (cart == null)
             {
                 return NotFound();
@@ -43,27 +66,63 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         }
 
         // PUT api/Cart/5
-        public async Task<IHttpActionResult> PutCart(int id, Cart cart)
+        [System.Web.Http.ActionName("PutCart")]
+        [RoleAuthentication("StoreCustomer")]
+        [ResponseType(typeof(Cart))]
+        public IHttpActionResult PutCart(int cartId, Cart cart)
         {
+            if(storeUser.CustomerCart.CartId != cartId)
+            {
+                Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != cart.CartId)
+            if (cartId != cart.CartId)
             {
                 return BadRequest();
             }
 
-            db.Entry(cart).State = EntityState.Modified;
+            var cartInDb = _repo.GetCart(cartId);
+            var gamesInCart = cart.Games;
+
+            if(cart.CartDate != null)
+            {
+                cartInDb.CartDate = cart.CartDate;
+            }
+            if(cart.Quantity != null)
+            {
+                cartInDb.Quantity = cart.Quantity;
+            }
+            if(cart.UserCartId != cartInDb.UserCartId)
+            {
+                return BadRequest();
+            }
+
+            if(gamesInCart != null)
+            {
+                cartInDb.Games = cartInDb.Games.Intersect(gamesInCart).ToList();
+            }
+
+            _repo.UpdateCart(cartInDb);
 
             try
             {
-                await db.SaveChangesAsync();
+                if (_repo.SaveAll())
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CartExists(id))
+                if (!_repo.CartExists(cartId))
                 {
                     return NotFound();
                 }
@@ -72,53 +131,44 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                     throw;
                 }
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST api/Cart
         [ResponseType(typeof(Cart))]
-        public async Task<IHttpActionResult> PostCart(Cart cart)
+        [RoleAuthentication("StoreCustomer")]
+        [System.Web.Http.ActionName("PostCart")]
+        public IHttpActionResult PostCart(Cart cart)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            db.Carts.Add(cart);
-            await db.SaveChangesAsync();
+            
+            _repo.AddCart(cart);
+            _repo.SaveAll();
 
             return CreatedAtRoute("DefaultApi", new { id = cart.CartId }, cart);
+           
         }
 
         // DELETE api/Cart/5
         [ResponseType(typeof(Cart))]
-        public async Task<IHttpActionResult> DeleteCart(int id)
+        [RoleAuthentication("StoreCustomer")]
+        [System.Web.Http.ActionName("DeleteCart")]
+        public async Task<IHttpActionResult> DeleteCart(int cartId)
         {
-            Cart cart = await db.Carts.FindAsync(id);
+
+            Cart cart = _repo.GetCart(cartId);
+            
             if (cart == null)
             {
                 return NotFound();
             }
 
-            db.Carts.Remove(cart);
-            await db.SaveChangesAsync();
+            _repo.RemoveCart(cart);
+            _repo.SaveAll();
 
             return Ok(cart);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool CartExists(int id)
-        {
-            return db.Carts.Count(e => e.CartId == id) > 0;
         }
     }
 }

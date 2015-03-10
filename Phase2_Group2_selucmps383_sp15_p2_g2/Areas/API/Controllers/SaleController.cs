@@ -64,7 +64,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         }
 
         [System.Web.Http.HttpPost]
-        [RoleAuthentication("StoreAdmin , Employee")]
+        [RoleAuthentication("StoreAdmin , StoreEmployee")]
         [ValidateAntiForgeryToken]
         [ResponseType(typeof(Sale))]
         [System.Web.Http.ActionName("PostSale")]

@@ -58,6 +58,14 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             return Ok(genre);
         }
 
+        [System.Web.Http.ActionName("GetGenresByGenre")]
+        public IQueryable GetGenresByGame(string gameName)
+        {
+            var genre = _repo.GetGame(gameName);
+            return genre.Genres.AsQueryable();
+
+        }
+
         // PUT api/Genre/5
         [System.Web.Http.ActionName("PutGenre")]
         [RoleAuthentication("StoreAdmin")]
@@ -147,6 +155,13 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             if (genre == null)
             {
                 return NotFound();
+            }
+
+            var gamesWithTag = genre.Games;
+
+            foreach (var g in gamesWithTag)
+            {
+                g.Genres.Remove(genre);
             }
 
             db.Genres.Remove(genre);
