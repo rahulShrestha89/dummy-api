@@ -83,6 +83,66 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             return CreatedAtRoute("DefaultApi", new {id = sale.SaleId }, sale);
         }
 
+        [RoleAuthentication("StoreAdmin")]
+        [ResponseType(typeof(Sale))]
+        [System.Web.Http.ActionName("PutSale")]
+        public IHttpActionResult PutSale(int saleId, [FromBody] Sale sale)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if(saleId != sale.SaleId)
+            {
+                return BadRequest();
+            }
+
+            var saleInDb = _repo.GetSaleById(saleId);
+
+            if(sale.SaleDate != null)
+            {
+                saleInDb.SaleDate = sale.SaleDate;
+            }
+
+            if(sale.User != saleInDb.User)
+            {
+                 saleInDb.User = sale.User;
+                 saleInDb.UserId = sale.User.UserId;
+            }
+
+            if(sale.TotalAmount != saleInDb.TotalAmount)
+            {
+                 saleInDb.TotalAmount = sale.TotalAmount;
+            }
+
+            _repo.UpdateSale(saleInDb);
+
+            try
+            {
+                if(_repo.SaveAll())
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if(!_repo.SaleExists(saleId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+        }
+
 
         [System.Web.Http.ActionName("DeleteSale")]
         [RoleAuthentication("StoreAdmin")]

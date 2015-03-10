@@ -9,6 +9,8 @@ using System.Web.Http.Description;
 using Phase2_Group2_selucmps383_sp15_p2_g2.DbContext;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using Phase2_Group2_selucmps383_sp15_p2_g2.Authentication;
+using System.Web.Mvc;
 
 namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
 {
@@ -35,6 +37,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
         {
             return _repo.GetAllGames().Select(g => _modelFactory.Create(g));
         }
+       
 
         [System.Web.Http.ActionName("GetGame")]
         [ResponseType(typeof(GameModel))]
@@ -47,40 +50,124 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             }
             return Ok(game);
         }
-        
-        [ResponseType(typeof(Game))]
-        public IHttpActionResult PostGame(Game addedGame)
+
+        [System.Web.Http.ActionName("GetGamesByGenre")]
+        public IQueryable GetGamesByGenre(string genreName)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            _db.Games.Add(addedGame);
-            _db.SaveChanges();
-           
-            return CreatedAtRoute("DefaultApi", new { id = addedGame.GameId }, addedGame);
+            var genre = _repo.GetGenre(genreName);
+            return genre.Games.AsQueryable();
+            
         }
 
-        public IHttpActionResult PutGame(Game game, int id)
+        [System.Web.Http.HttpPost]
+        [RoleAuthentication("StoreAdmin")]
+        [ValidateAntiForgeryToken]
+        [ResponseType(typeof(Game))]
+        [System.Web.Http.ActionName("PostGame")]
+        [ResponseType(typeof(Game))]
+        public IHttpActionResult PostGame(Game game)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            _repo.AddGame(game);
+            _repo.SaveAll();
+           
+            return CreatedAtRoute("DefaultApi", new { id = game.GameId }, game);
+        }
+
+        [RoleAuthentication("StoreAdmin")]
+        [ResponseType(typeof(Game))]
+        [System.Web.Http.ActionName("PutGame")]
+        public IHttpActionResult PutGame([FromBody]Game game, int gameId)
         {
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if(id != game.GameId)
+            if(gameId != game.GameId)
             {
                 return BadRequest();
             }
-            _db.Entry(game).State = EntityState.Modified;
+            var gameInDb = _repo.GetGame(gameId);
+
+            if (gameInDb == null)
+            {
+                return NotFound();
+            }
+
+            //Redundant checks for differences between game being put and one in db.
+            #region
+            if (game.GameName != null)
+            {
+                gameInDb.GameName = game.GameName;
+            }
+
+            if(game.ReleaseDate != null)
+            {
+                gameInDb.ReleaseDate = game.ReleaseDate;
+            }
+
+            if(game.GamePrice != null)
+            {
+                gameInDb.GamePrice = game.GamePrice;
+            }
+
+            if(game.InventoryCount != null)
+            {
+                gameInDb.InventoryCount = game.InventoryCount;
+            }
+            #endregion 
+            //end Redundant checks.
+
+            //Code to check if items are in the collection.
+            #region
+            var genresToAdd = game.Genres;
+            var tagsToAdd = game.Tags;
+
+           
+            if (genresToAdd != null)
+            {
+                foreach (var g in genresToAdd)
+                {
+                    if(!gameInDb.Genres.Contains(g)) //check if the item is not in the collection of genres
+                    {
+                        gameInDb.Genres.Add(g); //if not add it to the collection.
+                    }
+                }
+            }
+            
+            if(tagsToAdd != null)
+            {
+                foreach(var t in tagsToAdd)
+                {
+                    if (!gameInDb.Tags.Contains(t)) //check if the item is not in the collection of tags.
+                    {
+                        gameInDb.Tags.Add(t); //if not add it to the collection.
+                    }
+                }
+            }
+            #endregion
+            //end of checks.
+
+            _repo.UpdateGame(gameInDb);
 
             try
             {
-                _db.SaveChanges();
+                if(_repo.SaveAll())
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch(DbUpdateConcurrencyException)
             {
-                if (!GameExists(id))
+                if (!_repo.GameExists(gameId))
                 {
                     return NotFound();
                 }
@@ -91,8 +178,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
              
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
-
         }
 
         [ResponseType(typeof(Game))]
@@ -101,17 +186,12 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             Game game = _db.Games.Find(id);
             if(game != null)
             {
-                _db.Games.Remove(game);
-                _db.SaveChanges();
+                _repo.RemoveGame(game);
+                _repo.SaveAll();
                 return Ok(game);
             }
             return NotFound();
 
-        }
-
-        public bool GameExists(int id)
-        {
-            return _db.Games.Count(e => e.GameId == id) > 0;
         }
 
         protected override void Dispose(bool disposing)
