@@ -57,7 +57,9 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
                 GamePrice = game.GamePrice,
                 GameName = game.GameName,
                 ReleaseDate = game.ReleaseDate,
-                InventoryCount = game.InventoryCount
+                InventoryCount = game.InventoryCount,
+                Genres = game.Genres,
+                Tags = game.Tags
             };
         }
 

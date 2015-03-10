@@ -40,6 +40,15 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
         }
 
         /// <summary>
+        /// Removes a user from the db.
+        /// </summary>
+        /// <param name="user"></param>
+        public void RemoveUser(User user)
+        {
+            _context.Users.Remove(user);
+        }
+
+        /// <summary>
         /// Lists all games.
         /// </summary>
         /// <returns>Returns all games found.</returns>
@@ -59,6 +68,20 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             return _context.Games.Where(g => g.GameId == gameId).FirstOrDefault();
         }
 
+        public void UpdateGame(Game gameInDb)
+        {
+            _context.Entry(gameInDb).State = EntityState.Modified;
+        }
+
+        /// <summary>
+        /// Adds a game to the db.
+        /// </summary>
+        /// <param name="game"></param>
+        public void AddGame(Game game)
+        {
+            _context.Games.Add(game);
+        }
+
         /// <summary>
         /// Find game by genre
         /// </summary>
@@ -70,9 +93,14 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
                     .Where(u => u.Genres.Any(e => e.GenreId == genreId));
         }
 
-        public bool GameExists(int id)
+        public bool GameExists(int gameId)
         {
-            return _context.Games.Count(e => e.GameId == id) > 0;
+            return _context.Games.Count(e => e.GameId == gameId) > 0;
+        }
+
+        public bool UserExists(int userId)
+        {
+            return _context.Users.Count(u => u.UserId == userId) >0;
         }
         
         /// <summary>
@@ -143,6 +171,24 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
             _context.Sales.Remove(sale);
         }
 
+        /// <summary>
+        /// Removes a game from the db.
+        /// </summary>
+        /// <param name="game"></param>
+        public void RemoveGame(Game game)
+        {
+            _context.Games.Remove(game);
+        }
+
+        public void UpdateSale(Sale saleInDb)
+        {
+            _context.Entry(saleInDb).State = EntityState.Modified;
+        }
+
+        public bool SaleExists(int saleId)
+        {
+            return _context.Sales.Count(s => s.SaleId == saleId) > 0;
+        }
 
         public bool GenreExists(int genreId)
         {
@@ -177,6 +223,11 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Repository
        {
            _context.Entry(checkUserInDb).State = EntityState.Modified;
        }
+
+        public Genre GetGenre(string genreName)
+        {
+            return _context.Genres.Where(g => g.GenreName.Equals(genreName)).FirstOrDefault();
+        }
 
         public void Dispose(bool disposing)
         {

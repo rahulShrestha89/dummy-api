@@ -125,21 +125,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 return NotFound();
             }
 
-            //// remove from role 
-            /* Not sure if this is needed anymore.
-            if (user.Role != null)
-            {
-                var roleToBeRemovedFrom = Enum.GetName(typeof(Role), user.Role);
-                if(roleToBeRemovedFrom==null || !roleToBeRemovedFrom.Contains(Enum.GetName(typeof(Role), checkUserInDb.Role)))
-                {
-                    return BadRequest();
-                }
-                else
-                {
-                   checkUserInDb.Role.
-                }
-            }*/
-
             //// add role
             if(user.Role != checkUserInDb.Role)
             {
@@ -166,7 +151,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             {
                 if(_repo.SaveAll())
                 {
-                    return Ok();
+                    return StatusCode(HttpStatusCode.NoContent);
                 }
                 else
                 {
@@ -175,7 +160,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(userId))
+                if (!_repo.UserExists(userId))
                 {
                     return NotFound();
                 }
@@ -185,7 +170,6 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 }
             }
 
-           // return StatusCode(HttpStatusCode.NoContent);
         }
 
         private bool UserExists(int id)
@@ -204,8 +188,8 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Areas.API.Controllers
                 return NotFound();
             }
 
-            db.Users.Remove(user);
-            db.SaveChanges();
+            _repo.RemoveUser(user);
+            _repo.SaveAll();
 
             return Ok(user);
         }

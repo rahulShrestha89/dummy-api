@@ -16,5 +16,8 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2.Models
         public decimal GamePrice { get; set; }
         public int InventoryCount { get; set; }
 
+        public ICollection<Genre> Genres { get; set; }
+        public ICollection<Tag> Tags { get; set; }
+
     }
 }
