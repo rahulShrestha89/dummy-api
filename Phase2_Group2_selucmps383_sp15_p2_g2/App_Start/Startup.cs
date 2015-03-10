@@ -58,7 +58,7 @@ namespace Phase2_Group2_selucmps383_sp15_p2_g2
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             app.UseOAuthBearerTokens(OAuthOptions);
-            ConfigureAuth(app);
+           // ConfigureAuth(app);
         }
     }
 }
