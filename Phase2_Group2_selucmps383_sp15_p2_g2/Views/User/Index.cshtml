@@ -34,6 +34,41 @@
     </table>
 </div>
 
+<div>
+    <h3>Delete by User by Id</h3>
+    <input type="text" id="deleteUser" size="5" />
+    <input type="button" value="Delete" onclick="DeleteUser()" />
+</div>
+
+<div>
+    <h3>Update User </h3>
+    <table>
+        <tr>
+            <td>Id</td>
+            <td><input type="text" id="txtUId" /></td>
+        </tr>
+        <tr>
+            <td>First Name</td>
+            <td><input type="text" id="txtUFirstName" /></td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td><input type="text" id="txtULastName" /></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="text" id="txtUEmail" /></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" id="txtUPassword" /></td>
+        </tr>
+        <tr>
+            <td colspan="3" align="left"><input type="button" value="update" onclick="UpdateUser()" /></td>
+        </tr>
+    </table>
+</div>
+
 
     @section scripts{
         <script>
@@ -105,6 +140,55 @@
                     },
                     error: function () {
                         alert('Sorry! Error Occured!');
+                    }
+                });
+            }
+
+            function DeleteUser() {
+                var id = $('#deleteUser').val();
+                $.ajax({
+                    url: '/API/User/' + id,
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('x_cmps383_authentication_key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x_cmps383_authentication_id', $.cookie('UserId'));
+                    },
+                    success: function (data) {
+                        alert('User deleted');
+                        GetAllUsers();
+                    },
+                    error: function () {
+                        alert('User not found');
+                    }
+                });
+            }
+
+            function UpdateUser() {
+                var id = $('#txtUId').val();
+                var user = {
+                    Id: $('#txtUId').val(),
+                    FirstName: $('#txtUFirstName').val(),
+                    LastName: $('#txtULastName').val(),
+                    Email: $('#txtUEmail').val(),
+                    Password: $('#txtUEmail').val()
+                };
+
+                $.ajax({
+                    url: '/API/User/' + id,
+                    type: 'PUT',
+                    data: JSON.stringify(user),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('x_cmps383_authentication_key', $.cookie('ApiKey'));
+                        xhr.setRequestHeader('x_cmps383_authentication_id', $.cookie('UserId'));
+                    },
+                    success: function (data) {
+                        alert('Employee updated');
+                        GetAllUsers();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('error!');
                     }
                 });
             }
